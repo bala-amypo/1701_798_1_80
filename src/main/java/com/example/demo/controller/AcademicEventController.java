@@ -1,6 +1,4 @@
-// src/main/java/com/example/demo/controller/AcademicEventController.java
 package com.example.demo.controller;
-
 import com.example.demo.entity.AcademicEvent;
 import com.example.demo.service.AcademicEventService;
 import io.swagger.v3.oas.annotations.Operation;
