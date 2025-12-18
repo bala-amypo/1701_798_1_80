@@ -1,6 +1,4 @@
-// src/main/java/com/example/demo/dto/JwtResponse.java
 package com.example.demo.dto;
-
 public class JwtResponse {
     private String token;
     private String email;
