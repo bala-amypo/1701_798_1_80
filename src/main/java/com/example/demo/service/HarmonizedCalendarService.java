@@ -9,3 +9,4 @@ public interface HarmonizedCalendarService {
     HarmonizedCalendar generateHarmonizedCalendar(String title, String generatedBy);
     HarmonizedCalendar getCalendarById(Long id);
     List<HarmonizedCalendar> getAll
+}
