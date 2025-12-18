@@ -9,10 +9,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-public class HarmonizedCalendarServiceimpl implements HarmonizedCalendarService {
+public class HarmonizedCalendarServiceImpl implements HarmonizedCalendarService {
 
     private final HarmonizedCalendarRepository repository;
 
+    // ✅ CORRECT constructor
     public HarmonizedCalendarServiceImpl(HarmonizedCalendarRepository repository) {
         this.repository = repository;
     }
@@ -29,7 +30,6 @@ public class HarmonizedCalendarServiceimpl implements HarmonizedCalendarService 
         calendar.setStartDate(startDate);
         calendar.setEndDate(endDate);
         calendar.setGeneratedBy(generatedBy);
-
         return repository.save(calendar);
     }
 
