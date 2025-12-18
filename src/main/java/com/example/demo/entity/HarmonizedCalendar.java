@@ -1,71 +1,49 @@
-// src/main/java/com/example/demo/entity/HarmonizedCalendar.java
 package com.example.demo.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "harmonized_calendars")
 public class HarmonizedCalendar {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(nullable = false)
-    private String title;
+    @ManyToOne
+    @JoinColumn(name = "user_account_id")
+    private UserAccount userAccount;
     
-    @Column(name = "generated_by", nullable = false)
-    private String generatedBy;
-    
-    @Column(name = "generated_at", nullable = false, updatable = false)
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private String timeZone;
     private LocalDateTime generatedAt;
+    private Integer totalEvents;
+    private Integer uniqueDays;
     
-    @Column(name = "effective_from", nullable = false)
-    private LocalDate effectiveFrom;
-    
-    @Column(name = "effective_to", nullable = false)
-    private LocalDate effectiveTo;
-    
-    @Column(name = "events_json", columnDefinition = "TEXT", nullable = false)
-    private String eventsJson;
-    
-    @PrePersist
-    protected void onCreate() {
-        generatedAt = LocalDateTime.now();
-    }
-    
-    // Constructors, Getters and Setters
-    public HarmonizedCalendar() {}
-    
-    public HarmonizedCalendar(String title, String generatedBy, 
-                             LocalDate effectiveFrom, LocalDate effectiveTo, 
-                             String eventsJson) {
-        this.title = title;
-        this.generatedBy = generatedBy;
-        this.effectiveFrom = effectiveFrom;
-        this.effectiveTo = effectiveTo;
-        this.eventsJson = eventsJson;
-    }
-    
+    // Getters and setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+    public UserAccount getUserAccount() { return userAccount; }
+    public void setUserAccount(UserAccount userAccount) { this.userAccount = userAccount; }
     
-    public String getGeneratedBy() { return generatedBy; }
-    public void setGeneratedBy(String generatedBy) { this.generatedBy = generatedBy; }
+    public LocalDate getStartDate() { return startDate; }
+    public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
+    
+    public LocalDate getEndDate() { return endDate; }
+    public void setEndDate(LocalDate endDate) { this.endDate = endDate; }
+    
+    public String getTimeZone() { return timeZone; }
+    public void setTimeZone(String timeZone) { this.timeZone = timeZone; }
     
     public LocalDateTime getGeneratedAt() { return generatedAt; }
     public void setGeneratedAt(LocalDateTime generatedAt) { this.generatedAt = generatedAt; }
     
-    public LocalDate getEffectiveFrom() { return effectiveFrom; }
-    public void setEffectiveFrom(LocalDate effectiveFrom) { this.effectiveFrom = effectiveFrom; }
+    public Integer getTotalEvents() { return totalEvents; }
+    public void setTotalEvents(Integer totalEvents) { this.totalEvents = totalEvents; }
     
-    public LocalDate getEffectiveTo() { return effectiveTo; }
-    public void setEffectiveTo(LocalDate effectiveTo) { this.effectiveTo = effectiveTo; }
-    
-    public String getEventsJson() { return eventsJson; }
-    public void setEventsJson(String eventsJson) { this.eventsJson = eventsJson; }
+    public Integer getUniqueDays() { return uniqueDays; }
+    public void setUniqueDays(Integer uniqueDays) { this.uniqueDays = uniqueDays; }
 }
