@@ -1,6 +1,5 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.entity.ClashRecord;
 import com.example.demo.repository.ClashRecordRepository;
 import com.example.demo.service.ClashDetectionService;
@@ -32,7 +31,7 @@ public class ClashDetectionServiceImpl implements ClashDetectionService {
     @Override
     public ClashRecord resolveClash(Long clashId) {
         ClashRecord clash = clashRepository.findById(clashId)
-                .orElseThrow(() -> new ResourceNotFoundException("Clash not found with id: " + clashId));
+                .orElseThrow(() -> new RuntimeException("Clash not found with id: " + clashId));
         clash.setResolved(true);
         return clashRepository.save(clash);
     }
