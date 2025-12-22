@@ -1,51 +1,70 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.JwtResponse;
+import com.example.demo.dto.LoginRequest;
+import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.UserAccount;
+import com.example.demo.security.JwtUtil;
 import com.example.demo.service.UserAccountService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
 public class UserAccountController {
     
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
     private final UserAccountService userService;
     private final PasswordEncoder passwordEncoder;
     
-    public UserAccountController(UserAccountService userService, PasswordEncoder passwordEncoder) {
+    public UserAccountController(AuthenticationManager authenticationManager,
+                                JwtUtil jwtUtil,
+                                UserAccountService userService,
+                                PasswordEncoder passwordEncoder) {
+        this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
     }
     
     @PostMapping("/register")
-    public ResponseEntity<UserAccount> register(@RequestBody UserAccount user) {
+    public ResponseEntity<UserAccount> register(@RequestBody RegisterRequest registerRequest) {
+        UserAccount user = new UserAccount(
+            registerRequest.getName(),
+            registerRequest.getEmail(),
+            registerRequest.getPassword(),
+            registerRequest.getRole(),
+            registerRequest.getDepartment()
+        );
+        
         UserAccount registeredUser = userService.register(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
     }
     
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> loginRequest) {
-        String email = loginRequest.get("email");
-        String password = loginRequest.get("password");
+    public ResponseEntity<JwtResponse> login(@RequestBody LoginRequest loginRequest) {
+        Authentication authentication = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(
+                loginRequest.getEmail(),
+                loginRequest.getPassword()
+            )
+        );
         
-        UserAccount user = userService.findByEmail(email);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
         
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
-        }
+        UserAccount user = userService.findByEmail(loginRequest.getEmail());
+        String jwt = jwtUtil.generateToken(user.getEmail(), user.getRole(), user.getFullName());
         
-        Map<String, Object> response = new HashMap<>();
-        response.put("token", "dummy-jwt-token-for-" + email);
-        response.put("email", user.getEmail());
-        response.put("role", user.getRole());
-        response.put("name", user.getFullName());
-        
+        JwtResponse response = new JwtResponse(jwt, user.getEmail(), user.getRole(), user.getFullName());
         return ResponseEntity.ok(response);
     }
     
