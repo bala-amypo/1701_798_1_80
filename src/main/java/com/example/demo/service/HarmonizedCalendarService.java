@@ -100,7 +100,6 @@ public class HarmonizedCalendarServiceImpl implements HarmonizedCalendarService 
             return new ArrayList<>();
         }
 
-        // Sort events by start time
         List<AcademicEvent> sortedEvents = events.stream()
                 .sorted(Comparator.comparing(AcademicEvent::getStartTime))
                 .collect(Collectors.toList());
@@ -111,13 +110,10 @@ public class HarmonizedCalendarServiceImpl implements HarmonizedCalendarService 
         for (int i = 1; i < sortedEvents.size(); i++) {
             AcademicEvent nextEvent = sortedEvents.get(i);
             
-            // Check if events overlap
             if (currentEvent.getEndTime().isAfter(nextEvent.getStartTime())) {
-                // Merge overlapping events
                 if (currentEvent.getEndTime().isBefore(nextEvent.getEndTime())) {
                     currentEvent.setEndTime(nextEvent.getEndTime());
                 }
-                // Merge titles or descriptions
                 currentEvent.setEventName(currentEvent.getEventName() + " / " + nextEvent.getEventName());
             } else {
                 mergedEvents.add(currentEvent);
