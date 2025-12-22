@@ -27,4 +27,26 @@ public class AcademicEventController {
     @PutMapping("/{id}")
     public ResponseEntity<AcademicEvent> updateEvent(
             @PathVariable Long id, 
-            @RequestBody AcademicEvent
+            @RequestBody AcademicEvent event) {
+        AcademicEvent updatedEvent = eventService.updateEvent(id, event);
+        return ResponseEntity.ok(updatedEvent);
+    }
+    
+    @GetMapping("/branch/{branchId}")
+    public ResponseEntity<List<AcademicEvent>> getEventsByBranch(@PathVariable Long branchId) {
+        List<AcademicEvent> events = eventService.getEventsByBranch(branchId);
+        return ResponseEntity.ok(events);
+    }
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<AcademicEvent> getEventById(@PathVariable Long id) {
+        AcademicEvent event = eventService.getEventById(id);
+        return ResponseEntity.ok(event);
+    }
+    
+    @GetMapping
+    public ResponseEntity<List<AcademicEvent>> getAllEvents() {
+        List<AcademicEvent> events = eventService.getAllEvents();
+        return ResponseEntity.ok(events);
+    }
+}
