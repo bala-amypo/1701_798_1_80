@@ -1,5 +1,7 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.exception.ValidationException;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.entity.UserAccount;
 import com.example.demo.repository.UserAccountRepository;
 import com.example.demo.service.UserAccountService;
@@ -24,11 +26,11 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Override
     public UserAccount register(UserAccount user) {
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("Email already registered: " + user.getEmail());
+            throw new ValidationException("Email already registered: " + user.getEmail());
         }
         
         if (!isValidRole(user.getRole())) {
-            throw new RuntimeException("Invalid role. Must be one of: ADMIN, CALENDAR_MANAGER, REVIEWER");
+            throw new ValidationException("Invalid role. Must be one of: ADMIN, CALENDAR_MANAGER, REVIEWER");
         }
         
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -38,7 +40,7 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Override
     public UserAccount getUser(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
     }
     
     @Override
@@ -49,7 +51,7 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Override
     public UserAccount findByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
     }
     
     private boolean isValidRole(String role) {

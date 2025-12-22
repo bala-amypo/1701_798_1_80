@@ -1,5 +1,7 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.exception.ValidationException;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.entity.AcademicEvent;
 import com.example.demo.repository.AcademicEventRepository;
 import com.example.demo.service.AcademicEventService;
@@ -22,11 +24,11 @@ public class AcademicEventServiceImpl implements AcademicEventService {
     @Override
     public AcademicEvent createEvent(AcademicEvent event) {
         if (event.getStartDate().isAfter(event.getEndDate())) {
-            throw new RuntimeException("Start date must be before or equal to end date");
+            throw new ValidationException("Start date must be before or equal to end date");
         }
         
         if (event.getStartDate().isBefore(LocalDate.now())) {
-            throw new RuntimeException("Start date cannot be in the past");
+            throw new ValidationException("Start date cannot be in the past");
         }
         
         return eventRepository.save(event);
@@ -42,7 +44,7 @@ public class AcademicEventServiceImpl implements AcademicEventService {
         AcademicEvent existingEvent = getEventById(id);
         
         if (event.getStartDate().isAfter(event.getEndDate())) {
-            throw new RuntimeException("Start date must be before or equal to end date");
+            throw new ValidationException("Start date must be before or equal to end date");
         }
         
         existingEvent.setTitle(event.getTitle());
@@ -58,7 +60,7 @@ public class AcademicEventServiceImpl implements AcademicEventService {
     @Override
     public AcademicEvent getEventById(Long id) {
         return eventRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Event not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Event not found with id: " + id));
     }
     
     @Override

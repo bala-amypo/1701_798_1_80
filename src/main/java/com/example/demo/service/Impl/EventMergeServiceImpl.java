@@ -1,5 +1,7 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.exception.ValidationException;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.entity.AcademicEvent;
 import com.example.demo.entity.EventMergeRecord;
 import com.example.demo.repository.AcademicEventRepository;
@@ -28,23 +30,23 @@ public class EventMergeServiceImpl implements EventMergeService {
     @Override
     public EventMergeRecord mergeEvents(List<Long> eventIds, String reason) {
         if (eventIds == null || eventIds.size() < 2) {
-            throw new RuntimeException("At least two events are required for merging");
+            throw new ValidationException("At least two events are required for merging");
         }
         
         List<AcademicEvent> events = eventIds.stream()
                 .map(id -> eventRepository.findById(id)
-                        .orElseThrow(() -> new RuntimeException("Event not found with id: " + id)))
+                        .orElseThrow(() -> new ResourceNotFoundException("Event not found with id: " + id)))
                 .collect(Collectors.toList());
         
         LocalDate earliestStart = events.stream()
                 .map(AcademicEvent::getStartDate)
                 .min(LocalDate::compareTo)
-                .orElseThrow(() -> new RuntimeException("No valid start dates found"));
+                .orElseThrow(() -> new ValidationException("No valid start dates found"));
         
         LocalDate latestEnd = events.stream()
                 .map(AcademicEvent::getEndDate)
                 .max(LocalDate::compareTo)
-                .orElseThrow(() -> new RuntimeException("No valid end dates found"));
+                .orElseThrow(() -> new ValidationException("No valid end dates found"));
         
         String mergedTitle = "Merged: " + events.get(0).getTitle();
         String sourceEventIds = eventIds.stream()
@@ -65,7 +67,7 @@ public class EventMergeServiceImpl implements EventMergeService {
     @Override
     public EventMergeRecord getMergeRecordById(Long id) {
         return mergeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Merge record not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Merge record not found with id: " + id));
     }
     
     @Override
