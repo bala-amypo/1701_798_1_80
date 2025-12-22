@@ -91,9 +91,7 @@
 			<version>7.8.0</version>
 			<scope>test</scope>
 		</dependency>
-		
-		<!-- Provided Dependencies -->
-		<dependency>
+				<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
