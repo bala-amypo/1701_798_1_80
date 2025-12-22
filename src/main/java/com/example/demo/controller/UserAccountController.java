@@ -1,39 +1,41 @@
 package com.example.demo.controller;
 
-import com.example.demo.service.HarmonizedCalendarService;
+import com.example.demo.entity.UserAccount;
+import com.example.demo.service.UserAccountService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.time.LocalDate;
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/auth")
 public class UserAccountController {
-
-    private final HarmonizedCalendarService calendarService;
-
-    public UserAccountController(HarmonizedCalendarService calendarService) {
-        this.calendarService = calendarService;
+    
+    private final UserAccountService userService;
+    private final PasswordEncoder passwordEncoder;
+    
+    public UserAccountController(UserAccountService userService, PasswordEncoder passwordEncoder) {
+        this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
-
-    @PostMapping("/calendar")
-    public String createCalendar() {
-
-        Authentication authentication =
-                new UsernamePasswordAuthenticationToken("user", null);
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        calendarService.generateHarmonizedCalendar(
-                "My Calendar",
-                LocalDate.now(),
-                LocalDate.now().plusDays(10),
-                "SYSTEM"
-        );
-
-        return "Calendar created successfully";
+    
+    @PostMapping("/register")
+    public ResponseEntity<UserAccount> register(@RequestBody UserAccount user) {
+        UserAccount registeredUser = userService.register(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
+    }
+    
+    @GetMapping("/users")
+    public ResponseEntity<List<UserAccount>> getAllUsers() {
+        List<UserAccount> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
+    }
+    
+    @GetMapping("/users/{id}")
+    public ResponseEntity<UserAccount> getUserById(@PathVariable Long id) {
+        UserAccount user = userService.getUser(id);
+        return ResponseEntity.ok(user);
     }
 }
