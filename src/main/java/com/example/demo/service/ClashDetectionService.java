@@ -1,6 +1,4 @@
-// src/main/java/com/example/demo/service/ClashDetectionService.java
 package com.example.demo.service;
-
 import com.example.demo.entity.ClashRecord;
 import java.util.List;
 

@@ -1,6 +1,4 @@
-// src/main/java/com/example/demo/service/AcademicEventService.java
 package com.example.demo.service;
-
 import com.example.demo.entity.AcademicEvent;
 import java.util.List;
 

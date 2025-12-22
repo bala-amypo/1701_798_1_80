@@ -1,6 +1,4 @@
-// src/main/java/com/example/demo/service/EventMergeService.java
 package com.example.demo.service;
-
 import com.example.demo.entity.EventMergeRecord;
 import java.time.LocalDate;
 import java.util.List;

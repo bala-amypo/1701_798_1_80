@@ -33,20 +33,14 @@ public class HarmonizedCalendarServiceImpl implements HarmonizedCalendarService 
     @Override
     @Transactional
     public HarmonizedCalendar generateHarmonizedCalendar(String userId, LocalDate startDate, LocalDate endDate, String timeZone) {
-        // Convert userId from String to Long
         Long userIdLong = Long.parseLong(userId);
         
         UserAccount userAccount = userAccountRepository.findById(userIdLong)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Fetch academic events for the user within the date range
-        // You need to create this method in AcademicEventRepository
         List<AcademicEvent> academicEvents = academicEventRepository.findByUserAccountIdAndDateRange(userIdLong, startDate, endDate);
 
-        // Process and merge events
         List<AcademicEvent> mergedEvents = mergeOverlappingEvents(academicEvents, timeZone);
-
-        // Create harmonized calendar
         HarmonizedCalendar calendar = new HarmonizedCalendar();
         calendar.setUserAccount(userAccount);
         calendar.setStartDate(startDate);
@@ -54,12 +48,9 @@ public class HarmonizedCalendarServiceImpl implements HarmonizedCalendarService 
         calendar.setTimeZone(timeZone);
         calendar.setGeneratedAt(LocalDateTime.now());
         
-        // Calculate statistics
         calendar.setTotalEvents(mergedEvents.size());
         calendar.setUniqueDays(calculateUniqueDays(mergedEvents));
-        
-        // Save the harmonized calendar
-        return harmonizedCalendarRepository.save(calendar);
+                return harmonizedCalendarRepository.save(calendar);
     }
 
     @Override
@@ -91,7 +82,6 @@ public class HarmonizedCalendarServiceImpl implements HarmonizedCalendarService 
         Long idLong = Long.parseLong(id);
         HarmonizedCalendar existingCalendar = getHarmonizedCalendarById(String.valueOf(idLong));
         
-        // Update fields if they are not null in the updatedCalendar
         if (updatedCalendar.getStartDate() != null) {
             existingCalendar.setStartDate(updatedCalendar.getStartDate());
         }
