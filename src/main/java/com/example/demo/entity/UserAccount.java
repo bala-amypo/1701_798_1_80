@@ -34,11 +34,9 @@ public class UserAccount {
         createdAt = LocalDateTime.now();
     }
     
-    // Constructors, Getters and Setters
     public UserAccount() {}
     
-    public UserAccount(String fullName, String email, String password, 
-                      String role, String department) {
+    public UserAccount(String fullName, String email, String password, String role, String department) {
         this.fullName = fullName;
         this.email = email;
         this.password = password;

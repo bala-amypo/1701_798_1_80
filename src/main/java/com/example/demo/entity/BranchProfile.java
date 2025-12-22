@@ -34,7 +34,6 @@ public class BranchProfile {
         }
     }
     
-    // Constructors, Getters and Setters
     public BranchProfile() {}
     
     public BranchProfile(String branchCode, String branchName, String contactEmail) {

@@ -33,6 +33,7 @@ public class EventMergeRecord {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
     }
+    
     public EventMergeRecord() {}
     
     public EventMergeRecord(String sourceEventIds, String mergedTitle, 

@@ -1,30 +1,78 @@
 package com.example.demo.entity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "academic_events")
 public class AcademicEvent {
-    // ... other fields
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
-    private String eventName;  // or getTitle() depending on your entity
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    @Column(name = "branch_id", nullable = false)
+    private Long branchId;
     
-    @ManyToOne
-    @JoinColumn(name = "user_account_id")
-    private UserAccount userAccount;
+    @Column(nullable = false)
+    private String title;
     
-    // Getters and setters
-    public String getEventName() { return eventName; }
-    public void setEventName(String eventName) { this.eventName = eventName; }
+    @Column(name = "event_type", nullable = false)
+    private String eventType;
     
-    public LocalDateTime getStartTime() { return startTime; }
-    public void setStartTime(LocalDateTime startTime) { this.startTime = startTime; }
+    @Column(name = "start_date", nullable = false)
+    private LocalDate startDate;
     
-    public LocalDateTime getEndTime() { return endTime; }
-    public void setEndTime(LocalDateTime endTime) { this.endTime = endTime; }
+    @Column(name = "end_date", nullable = false)
+    private LocalDate endDate;
     
-    public UserAccount getUserAccount() { return userAccount; }
-    public void setUserAccount(UserAccount userAccount) { this.userAccount = userAccount; }
+    private String location;
+    
+    private String description;
+    
+    @Column(name = "submitted_at", nullable = false, updatable = false)
+    private LocalDateTime submittedAt;
+    
+    @PrePersist
+    protected void onCreate() {
+        submittedAt = LocalDateTime.now();
+    }
+    
+    public AcademicEvent() {}
+    
+    public AcademicEvent(Long branchId, String title, String eventType, 
+                        LocalDate startDate, LocalDate endDate) {
+        this.branchId = branchId;
+        this.title = title;
+        this.eventType = eventType;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+    
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    
+    public Long getBranchId() { return branchId; }
+    public void setBranchId(Long branchId) { this.branchId = branchId; }
+    
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+    
+    public String getEventType() { return eventType; }
+    public void setEventType(String eventType) { this.eventType = eventType; }
+    
+    public LocalDate getStartDate() { return startDate; }
+    public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
+    
+    public LocalDate getEndDate() { return endDate; }
+    public void setEndDate(LocalDate endDate) { this.endDate = endDate; }
+    
+    public String getLocation() { return location; }
+    public void setLocation(String location) { this.location = location; }
+    
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    
+    public LocalDateTime getSubmittedAt() { return submittedAt; }
+    public void setSubmittedAt(LocalDateTime submittedAt) { this.submittedAt = submittedAt; }
 }

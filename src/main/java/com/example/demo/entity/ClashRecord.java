@@ -36,7 +36,6 @@ public class ClashRecord {
         detectedAt = LocalDateTime.now();
     }
     
-    // Constructors, Getters and Setters
     public ClashRecord() {}
     
     public ClashRecord(Long eventAId, Long eventBId, String clashType, 
