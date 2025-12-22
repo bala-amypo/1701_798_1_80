@@ -1,6 +1,3 @@
-// src/main/java/com/example/demo/controller/EventMergeController.java
-package com.example.demo.controller;
-
 import com.example.demo.dto.MergeEventsRequest;
 import com.example.demo.entity.EventMergeRecord;
 import com.example.demo.service.EventMergeService;

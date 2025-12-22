@@ -21,8 +21,6 @@ public class HarmonizedCalendar {
     private LocalDateTime generatedAt;
     private Integer totalEvents;
     private Integer uniqueDays;
-    
-    // Getters and setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     

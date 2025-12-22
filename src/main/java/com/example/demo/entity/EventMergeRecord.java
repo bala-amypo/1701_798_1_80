@@ -1,4 +1,3 @@
-// src/main/java/com/example/demo/entity/EventMergeRecord.java
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
@@ -34,8 +33,6 @@ public class EventMergeRecord {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
     }
-    
-    // Constructors, Getters and Setters
     public EventMergeRecord() {}
     
     public EventMergeRecord(String sourceEventIds, String mergedTitle, 
