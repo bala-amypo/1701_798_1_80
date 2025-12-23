@@ -31,10 +31,8 @@ public class UserAccount {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
     
-    // Default constructor (required by JPA)
     public UserAccount() {}
     
-    // Constructor with 5 parameters (as indicated in errors)
     public UserAccount(String firstName, String lastName, String email, 
                        String username, String password) {
         this.firstName = firstName;
@@ -44,7 +42,6 @@ public class UserAccount {
         this.password = password;
     }
     
-    // Constructor with 7 parameters (for test compatibility)
     public UserAccount(Long id, String firstName, String lastName, String email, 
                        String username, String password, LocalDateTime createdAt) {
         this.id = id;
@@ -56,7 +53,6 @@ public class UserAccount {
         this.createdAt = createdAt;
     }
     
-    // Getters and setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     
@@ -75,8 +71,13 @@ public class UserAccount {
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
     
-    public String getRole() { return role != null ? role : "USER"; }
-    public void setRole(String role) { this.role = role; }
+    public String getRole() { 
+        return role != null ? role : "USER"; 
+    }
+    
+    public void setRole(String role) { 
+        this.role = role; 
+    }
     
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
