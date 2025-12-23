@@ -51,7 +51,7 @@ public class AcademicEventServiceImpl implements AcademicEventService {
         existingEvent.setStartDate(event.getStartDate());
         existingEvent.setEndDate(event.getEndDate());
         existingEvent.setLocation(event.getLocation());
-        existingEvent.setDescription(event.getDescription());
+        String eventLocation = event.getLocation();
         
         return eventRepository.save(existingEvent);
     }
