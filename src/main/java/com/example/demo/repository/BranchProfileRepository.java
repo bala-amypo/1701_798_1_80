@@ -10,5 +10,6 @@ import java.util.Optional;
 @Repository
 public interface BranchProfileRepository extends JpaRepository<BranchProfile, Long> {
     Optional<BranchProfile> findByBranchCode(String branchCode);
-    List<BranchProfile> findByActiveTrue();
+    List<BranchProfile> findByIsActiveTrue();  // Changed from findByActiveTrue() to findByIsActiveTrue()
+    boolean existsByBranchCode(String branchCode);
 }
