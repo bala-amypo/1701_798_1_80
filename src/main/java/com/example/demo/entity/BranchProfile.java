@@ -4,59 +4,71 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "branch_profiles", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "branchCode")
-})
+@Table(name = "branch_profiles")
 public class BranchProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(name = "branch_code", nullable = false, unique = true)
-    private String branchCode;
-    
     @Column(name = "branch_name", nullable = false)
     private String branchName;
     
-    @Column(name = "contact_email", nullable = false)
-    private String contactEmail;
+    @Column(name = "location", nullable = false)
+    private String location;
     
-    @Column(name = "last_sync_at")
-    private LocalDateTime lastSyncAt;
+    @Column(name = "contact_info")
+    private String contactInfo;
     
-    @Column(nullable = false)
-    private Boolean active = true;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
     
-    @PrePersist
-    protected void onCreate() {
-        if (lastSyncAt == null) {
-            lastSyncAt = LocalDateTime.now();
-        }
-    }
+    @Column(name = "is_active")
+    private boolean isActive = true;
     
+    // Default constructor
     public BranchProfile() {}
     
-    public BranchProfile(String branchCode, String branchName, String contactEmail) {
-        this.branchCode = branchCode;
+    // Constructor with 3 parameters
+    public BranchProfile(String branchName, String location, String contactInfo) {
         this.branchName = branchName;
-        this.contactEmail = contactEmail;
+        this.location = location;
+        this.contactInfo = contactInfo;
     }
     
+    // Constructor with 6 parameters (for test compatibility)
+    public BranchProfile(Long id, String branchName, String location, 
+                         String contactInfo, LocalDateTime createdAt, boolean isActive) {
+        this.id = id;
+        this.branchName = branchName;
+        this.location = location;
+        this.contactInfo = contactInfo;
+        this.createdAt = createdAt;
+        this.isActive = isActive;
+    }
+    
+    // Getters and setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-    
-    public String getBranchCode() { return branchCode; }
-    public void setBranchCode(String branchCode) { this.branchCode = branchCode; }
     
     public String getBranchName() { return branchName; }
     public void setBranchName(String branchName) { this.branchName = branchName; }
     
-    public String getContactEmail() { return contactEmail; }
-    public void setContactEmail(String contactEmail) { this.contactEmail = contactEmail; }
+    public String getLocation() { return location; }
+    public void setLocation(String location) { this.location = location; }
     
-    public LocalDateTime getLastSyncAt() { return lastSyncAt; }
-    public void setLastSyncAt(LocalDateTime lastSyncAt) { this.lastSyncAt = lastSyncAt; }
+    public String getContactInfo() { return contactInfo; }
+    public void setContactInfo(String contactInfo) { this.contactInfo = contactInfo; }
     
-    public Boolean getActive() { return active; }
-    public void setActive(Boolean active) { this.active = active; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    
+    public boolean isActive() { return isActive; }
+    public void setActive(boolean active) { isActive = active; }
+    
+    @PrePersist
+    protected void prePersist() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+    }
 }
