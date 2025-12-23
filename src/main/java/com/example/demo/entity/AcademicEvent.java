@@ -20,6 +20,9 @@ public class AcademicEvent {
     @Column(name = "event_type")
     private String eventType;
     
+    @Column(name = "location")
+    private String location;
+    
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
     
@@ -75,6 +78,17 @@ public class AcademicEvent {
     
     public String getEventType() { return eventType; }
     public void setEventType(String eventType) { this.eventType = eventType; }
+    
+    public String getTitle() {
+        return eventName;
+    }
+    
+    public void setTitle(String title) {
+        this.eventName = title;
+    }
+    
+    public String getLocation() { return location; }
+    public void setLocation(String location) { this.location = location; }
     
     public LocalDate getStartDate() { return startDate; }
     public void setStartDate(LocalDate startDate) { this.startDate = startDate; }

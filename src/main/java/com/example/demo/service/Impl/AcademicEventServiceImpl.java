@@ -47,8 +47,7 @@ public class AcademicEventServiceImpl implements AcademicEventService {
             throw new ValidationException("Start date must be before or equal to end date");
         }
         
-        existingEvent.setTitle(event.getTitle());
-        existingEvent.setEventType(event.getEventType());
+        String eventTitle = event.getEventName();
         existingEvent.setStartDate(event.getStartDate());
         existingEvent.setEndDate(event.getEndDate());
         existingEvent.setLocation(event.getLocation());
