@@ -1,5 +1,6 @@
 package com.example.demo.servlet;
 
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -7,17 +8,18 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(urlPatterns = "/simple-status")
+@WebServlet("/status")
 public class SimpleStatusServlet extends HttpServlet {
     
+    // Change from protected to public for test access
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
-            throws IOException {
-        response.setContentType("text/plain");
-        response.setStatus(200);
+    public void doGet(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
         
         PrintWriter out = response.getWriter();
-        out.print("Servlet Alive");
+        out.print("{\"status\": \"OK\", \"service\": \"Academic Calendar Harmonizer\"}");
         out.flush();
     }
 }
