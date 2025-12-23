@@ -25,6 +25,9 @@ public class UserAccount {
     @Column(name = "password_hash", nullable = false)
     private String password;
     
+    @Column(name = "role")
+    private String role = "USER";
+    
     @Column(name = "created_at")
     private LocalDateTime createdAt;
     
@@ -72,13 +75,23 @@ public class UserAccount {
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
     
+    public String getRole() { return role != null ? role : "USER"; }
+    public void setRole(String role) { this.role = role; }
+    
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
     
     @PrePersist
     protected void prePersist() {
         if (createdAt == null) {
             createdAt = LocalDateTime.now();
+        }
+        if (role == null) {
+            role = "USER";
         }
     }
 }

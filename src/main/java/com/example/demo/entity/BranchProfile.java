@@ -13,11 +13,17 @@ public class BranchProfile {
     @Column(name = "branch_name", nullable = false)
     private String branchName;
     
+    @Column(name = "branch_code")
+    private String branchCode;
+    
     @Column(name = "location", nullable = false)
     private String location;
     
     @Column(name = "contact_info")
     private String contactInfo;
+    
+    @Column(name = "last_sync_at")
+    private LocalDateTime lastSyncAt;
     
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -53,11 +59,24 @@ public class BranchProfile {
     public String getBranchName() { return branchName; }
     public void setBranchName(String branchName) { this.branchName = branchName; }
     
+    public String getBranchCode() {
+        if (branchCode == null && branchName != null) {
+            // Generate a simple branch code from name
+            return branchName.replaceAll("[^a-zA-Z0-9]", "").toUpperCase().substring(0, Math.min(6, branchName.length()));
+        }
+        return branchCode;
+    }
+    
+    public void setBranchCode(String branchCode) { this.branchCode = branchCode; }
+    
     public String getLocation() { return location; }
     public void setLocation(String location) { this.location = location; }
     
     public String getContactInfo() { return contactInfo; }
     public void setContactInfo(String contactInfo) { this.contactInfo = contactInfo; }
+    
+    public LocalDateTime getLastSyncAt() { return lastSyncAt; }
+    public void setLastSyncAt(LocalDateTime lastSyncAt) { this.lastSyncAt = lastSyncAt; }
     
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
@@ -69,6 +88,9 @@ public class BranchProfile {
     protected void prePersist() {
         if (createdAt == null) {
             createdAt = LocalDateTime.now();
+        }
+        if (branchCode == null && branchName != null) {
+            branchCode = branchName.replaceAll("[^a-zA-Z0-9]", "").toUpperCase().substring(0, Math.min(6, branchName.length()));
         }
     }
 }
