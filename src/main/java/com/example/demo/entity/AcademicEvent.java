@@ -14,10 +14,10 @@ public class AcademicEvent {
     @Column(name = "branch_id", nullable = false)
     private Long branchId;
     
-    @Column(nullable = false)
-    private String title;
+    @Column(name = "event_name", nullable = false)
+    private String eventName;
     
-    @Column(name = "event_type", nullable = false)
+    @Column(name = "event_type")
     private String eventType;
     
     @Column(name = "start_date", nullable = false)
@@ -26,37 +26,52 @@ public class AcademicEvent {
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
     
-    private String location;
-    
+    @Column(name = "description")
     private String description;
     
-    @Column(name = "submitted_at", nullable = false, updatable = false)
-    private LocalDateTime submittedAt;
+    @Column(name = "status")
+    private String status;
     
-    @PrePersist
-    protected void onCreate() {
-        submittedAt = LocalDateTime.now();
-    }
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
     
+    // Default constructor
     public AcademicEvent() {}
     
-    public AcademicEvent(Long branchId, String title, String eventType, 
+    // Constructor with 5 parameters
+    public AcademicEvent(Long branchId, String eventName, String eventType,
                         LocalDate startDate, LocalDate endDate) {
         this.branchId = branchId;
-        this.title = title;
+        this.eventName = eventName;
         this.eventType = eventType;
         this.startDate = startDate;
         this.endDate = endDate;
     }
     
+    // Constructor with 9 parameters (for test compatibility)
+    public AcademicEvent(Long id, Long branchId, String eventName, String eventType,
+                        LocalDate startDate, LocalDate endDate, String description,
+                        String status, LocalDateTime createdAt) {
+        this.id = id;
+        this.branchId = branchId;
+        this.eventName = eventName;
+        this.eventType = eventType;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.description = description;
+        this.status = status;
+        this.createdAt = createdAt;
+    }
+    
+    // Getters and setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     
     public Long getBranchId() { return branchId; }
     public void setBranchId(Long branchId) { this.branchId = branchId; }
     
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+    public String getEventName() { return eventName; }
+    public void setEventName(String eventName) { this.eventName = eventName; }
     
     public String getEventType() { return eventType; }
     public void setEventType(String eventType) { this.eventType = eventType; }
@@ -67,12 +82,22 @@ public class AcademicEvent {
     public LocalDate getEndDate() { return endDate; }
     public void setEndDate(LocalDate endDate) { this.endDate = endDate; }
     
-    public String getLocation() { return location; }
-    public void setLocation(String location) { this.location = location; }
-    
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
     
-    public LocalDateTime getSubmittedAt() { return submittedAt; }
-    public void setSubmittedAt(LocalDateTime submittedAt) { this.submittedAt = submittedAt; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+    
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    
+    @PrePersist
+    protected void prePersist() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+        if (status == null) {
+            status = "SCHEDULED";
+        }
+    }
 }

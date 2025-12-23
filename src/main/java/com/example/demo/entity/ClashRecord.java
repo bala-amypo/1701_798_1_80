@@ -10,64 +10,86 @@ public class ClashRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(name = "event_a_id", nullable = false)
-    private Long eventAId;
+    @Column(name = "event_id_1", nullable = false)
+    private Long eventId1;
     
-    @Column(name = "event_b_id", nullable = false)
-    private Long eventBId;
+    @Column(name = "event_id_2", nullable = false)
+    private Long eventId2;
     
-    @Column(name = "clash_type", nullable = false)
-    private String clashType;
+    @Column(name = "description", columnDefinition = "TEXT")
+    private String description;
     
-    @Column(nullable = false)
-    private String severity;
+    @Column(name = "resolution", columnDefinition = "TEXT")
+    private String resolution;
     
-    @Column(length = 1000)
-    private String details;
+    @Column(name = "status")
+    private String status;
     
-    @Column(name = "detected_at", nullable = false, updatable = false)
-    private LocalDateTime detectedAt;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
     
-    @Column(nullable = false)
-    private Boolean resolved = false;
+    @Column(name = "resolved")
+    private boolean resolved = false;
     
-    @PrePersist
-    protected void onCreate() {
-        detectedAt = LocalDateTime.now();
-    }
-    
+    // Default constructor
     public ClashRecord() {}
     
-    public ClashRecord(Long eventAId, Long eventBId, String clashType, 
-                      String severity, String details) {
-        this.eventAId = eventAId;
-        this.eventBId = eventBId;
-        this.clashType = clashType;
-        this.severity = severity;
-        this.details = details;
+    // Constructor with 5 parameters
+    public ClashRecord(Long eventId1, Long eventId2, String description,
+                      String resolution, String status) {
+        this.eventId1 = eventId1;
+        this.eventId2 = eventId2;
+        this.description = description;
+        this.resolution = resolution;
+        this.status = status;
     }
     
+    // Constructor with 8 parameters (for test compatibility)
+    public ClashRecord(Long id, Long eventId1, Long eventId2, String description,
+                      String resolution, String status, LocalDateTime createdAt,
+                      boolean resolved) {
+        this.id = id;
+        this.eventId1 = eventId1;
+        this.eventId2 = eventId2;
+        this.description = description;
+        this.resolution = resolution;
+        this.status = status;
+        this.createdAt = createdAt;
+        this.resolved = resolved;
+    }
+    
+    // Getters and setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     
-    public Long getEventAId() { return eventAId; }
-    public void setEventAId(Long eventAId) { this.eventAId = eventAId; }
+    public Long getEventId1() { return eventId1; }
+    public void setEventId1(Long eventId1) { this.eventId1 = eventId1; }
     
-    public Long getEventBId() { return eventBId; }
-    public void setEventBId(Long eventBId) { this.eventBId = eventBId; }
+    public Long getEventId2() { return eventId2; }
+    public void setEventId2(Long eventId2) { this.eventId2 = eventId2; }
     
-    public String getClashType() { return clashType; }
-    public void setClashType(String clashType) { this.clashType = clashType; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
     
-    public String getSeverity() { return severity; }
-    public void setSeverity(String severity) { this.severity = severity; }
+    public String getResolution() { return resolution; }
+    public void setResolution(String resolution) { this.resolution = resolution; }
     
-    public String getDetails() { return details; }
-    public void setDetails(String details) { this.details = details; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
     
-    public LocalDateTime getDetectedAt() { return detectedAt; }
-    public void setDetectedAt(LocalDateTime detectedAt) { this.detectedAt = detectedAt; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     
-    public Boolean getResolved() { return resolved; }
-    public void setResolved(Boolean resolved) { this.resolved = resolved; }
+    public boolean isResolved() { return resolved; }
+    public void setResolved(boolean resolved) { this.resolved = resolved; }
+    
+    @PrePersist
+    protected void prePersist() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+        if (status == null) {
+            status = "DETECTED";
+        }
+    }
 }

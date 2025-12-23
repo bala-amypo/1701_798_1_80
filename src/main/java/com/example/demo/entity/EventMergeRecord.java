@@ -11,11 +11,11 @@ public class EventMergeRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(name = "source_event_ids", nullable = false, length = 1000)
-    private String sourceEventIds;
+    @Column(name = "original_event_name_1", nullable = false)
+    private String originalEventName1;
     
-    @Column(name = "merged_title", nullable = false)
-    private String mergedTitle;
+    @Column(name = "original_event_name_2", nullable = false)
+    private String originalEventName2;
     
     @Column(name = "merged_start_date", nullable = false)
     private LocalDate mergedStartDate;
@@ -23,37 +23,48 @@ public class EventMergeRecord {
     @Column(name = "merged_end_date", nullable = false)
     private LocalDate mergedEndDate;
     
-    @Column(name = "merge_reason", nullable = false)
-    private String mergeReason;
+    @Column(name = "merged_event_name", nullable = false)
+    private String mergedEventName;
     
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
     
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-    }
-    
+    // Default constructor
     public EventMergeRecord() {}
     
-    public EventMergeRecord(String sourceEventIds, String mergedTitle, 
-                           LocalDate mergedStartDate, LocalDate mergedEndDate, 
-                           String mergeReason) {
-        this.sourceEventIds = sourceEventIds;
-        this.mergedTitle = mergedTitle;
+    // Constructor with 5 parameters
+    public EventMergeRecord(String originalEventName1, String originalEventName2,
+                           LocalDate mergedStartDate, LocalDate mergedEndDate,
+                           String mergedEventName) {
+        this.originalEventName1 = originalEventName1;
+        this.originalEventName2 = originalEventName2;
         this.mergedStartDate = mergedStartDate;
         this.mergedEndDate = mergedEndDate;
-        this.mergeReason = mergeReason;
+        this.mergedEventName = mergedEventName;
     }
     
+    // Constructor with 7 parameters (for test compatibility)
+    public EventMergeRecord(Long id, String originalEventName1, String originalEventName2,
+                           LocalDate mergedStartDate, LocalDate mergedEndDate,
+                           String mergedEventName, LocalDateTime createdAt) {
+        this.id = id;
+        this.originalEventName1 = originalEventName1;
+        this.originalEventName2 = originalEventName2;
+        this.mergedStartDate = mergedStartDate;
+        this.mergedEndDate = mergedEndDate;
+        this.mergedEventName = mergedEventName;
+        this.createdAt = createdAt;
+    }
+    
+    // Getters and setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     
-    public String getSourceEventIds() { return sourceEventIds; }
-    public void setSourceEventIds(String sourceEventIds) { this.sourceEventIds = sourceEventIds; }
+    public String getOriginalEventName1() { return originalEventName1; }
+    public void setOriginalEventName1(String originalEventName1) { this.originalEventName1 = originalEventName1; }
     
-    public String getMergedTitle() { return mergedTitle; }
-    public void setMergedTitle(String mergedTitle) { this.mergedTitle = mergedTitle; }
+    public String getOriginalEventName2() { return originalEventName2; }
+    public void setOriginalEventName2(String originalEventName2) { this.originalEventName2 = originalEventName2; }
     
     public LocalDate getMergedStartDate() { return mergedStartDate; }
     public void setMergedStartDate(LocalDate mergedStartDate) { this.mergedStartDate = mergedStartDate; }
@@ -61,9 +72,16 @@ public class EventMergeRecord {
     public LocalDate getMergedEndDate() { return mergedEndDate; }
     public void setMergedEndDate(LocalDate mergedEndDate) { this.mergedEndDate = mergedEndDate; }
     
-    public String getMergeReason() { return mergeReason; }
-    public void setMergeReason(String mergeReason) { this.mergeReason = mergeReason; }
+    public String getMergedEventName() { return mergedEventName; }
+    public void setMergedEventName(String mergedEventName) { this.mergedEventName = mergedEventName; }
     
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    
+    @PrePersist
+    protected void prePersist() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+    }
 }
