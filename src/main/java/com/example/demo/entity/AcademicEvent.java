@@ -38,10 +38,8 @@ public class AcademicEvent {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
     
-    // Default constructor
     public AcademicEvent() {}
     
-    // Constructor with 5 parameters
     public AcademicEvent(Long branchId, String eventName, String eventType,
                         LocalDate startDate, LocalDate endDate) {
         this.branchId = branchId;
@@ -51,7 +49,6 @@ public class AcademicEvent {
         this.endDate = endDate;
     }
     
-    // Constructor with 9 parameters (for test compatibility)
     public AcademicEvent(Long id, Long branchId, String eventName, String eventType,
                         LocalDate startDate, LocalDate endDate, String description,
                         String status, LocalDateTime createdAt) {
@@ -66,7 +63,6 @@ public class AcademicEvent {
         this.createdAt = createdAt;
     }
     
-    // Getters and setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     
@@ -79,13 +75,8 @@ public class AcademicEvent {
     public String getEventType() { return eventType; }
     public void setEventType(String eventType) { this.eventType = eventType; }
     
-    public String getTitle() {
-        return eventName;
-    }
-    
-    public void setTitle(String title) {
-        this.eventName = title;
-    }
+    public String getTitle() { return eventName; }
+    public void setTitle(String title) { this.eventName = title; }
     
     public String getLocation() { return location; }
     public void setLocation(String location) { this.location = location; }
