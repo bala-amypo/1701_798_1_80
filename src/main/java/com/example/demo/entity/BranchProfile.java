@@ -79,6 +79,11 @@ public class BranchProfile {
     public boolean isActive() { return isActive; }
     public void setActive(boolean active) { isActive = active; }
     
+    // Add this getter for JPA query compatibility
+    public boolean getActive() {
+        return isActive;
+    }
+    
     @PrePersist
     protected void prePersist() {
         if (createdAt == null) {
