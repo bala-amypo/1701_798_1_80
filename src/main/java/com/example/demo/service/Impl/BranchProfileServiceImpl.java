@@ -26,7 +26,7 @@ public class BranchProfileServiceImpl implements BranchProfileService {
     @Override
     public BranchProfile createBranch(BranchProfile branch) {
         String branchCode = branch.getBranchCode();
-        if (branchRepository.existsByBranchCode(branchCode)) {
+        if (branchRepository.findByBranchCode(branchCode).isPresent()) {
             throw new RuntimeException("Branch code already exists: " + branchCode);
         }
         
@@ -61,30 +61,5 @@ public class BranchProfileServiceImpl implements BranchProfileService {
     public BranchProfile findByBranchCode(String branchCode) {
         return branchRepository.findByBranchCode(branchCode)
                 .orElseThrow(() -> new RuntimeException("Branch not found with code: " + branchCode));
-    }
-    
-    @Override
-    public BranchProfile updateBranch(Long id, BranchProfile branchDetails) {
-        BranchProfile branch = getBranchById(id);
-        
-        branch.setBranchName(branchDetails.getBranchName());
-        branch.setBranchCode(branchDetails.getBranchCode());
-        branch.setLocation(branchDetails.getLocation());
-        branch.setContactInfo(branchDetails.getContactInfo());
-        branch.setLastSyncAt(LocalDateTime.now());
-        
-        return branchRepository.save(branch);
-    }
-    
-    @Override
-    public void deleteBranch(Long id) {
-        BranchProfile branch = getBranchById(id);
-        branchRepository.delete(branch);
-    }
-    
-    @Override
-    public List<BranchProfile> getActiveBranches() {
-        // Use findByIsActiveTrue() instead of findByActiveTrue()
-        return branchRepository.findByIsActiveTrue();
     }
 }
