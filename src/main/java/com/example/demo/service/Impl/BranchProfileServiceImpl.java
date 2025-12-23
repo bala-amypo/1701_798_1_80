@@ -30,7 +30,7 @@ public class BranchProfileServiceImpl implements BranchProfileService {
             throw new RuntimeException("Branch code already exists: " + branchCode);
         }
         
-        log.info("Processing branch: {} with code: {}", branch.getBranchName(), branchCode);
+        log.info("Processing branch: {} with code: {}", branch.getBranchName(), branch.getBranchCode());
         
         branch.setActive(true);
         branch.setLastSyncAt(LocalDateTime.now());
