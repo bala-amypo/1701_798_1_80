@@ -1,11 +1,14 @@
-package com.example.demo.exception;
+package com.example.demo.repository;
 
-public class ValidationException extends RuntimeException {
-    public ValidationException(String message) {
-        super(message);
-    }
-    
-    public ValidationException(String message, Throwable cause) {
-        super(message, cause);
-    }
+import com.example.demo.entity.AcademicEvent;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@Repository
+public interface AcademicEventRepository extends JpaRepository<AcademicEvent, Long> {
+    List<AcademicEvent> findByBranchId(Long branchId);
+    List<AcademicEvent> findByStartDateBetween(LocalDate startDate, LocalDate endDate);
 }
