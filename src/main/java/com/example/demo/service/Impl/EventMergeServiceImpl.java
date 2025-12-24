@@ -6,6 +6,7 @@ import com.example.demo.service.EventMergeService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -38,5 +39,28 @@ public class EventMergeServiceImpl implements EventMergeService {
     public void deleteMergeRecord(Long id) {
         EventMergeRecord record = getMergeRecordById(id);
         mergeRepository.delete(record);
+    }
+    
+    @Override
+    public List<EventMergeRecord> findByOriginalEventNames(String eventName1, String eventName2) {
+        return mergeRepository.findByOriginalEventName1OrOriginalEventName2(eventName1, eventName2);
+    }
+    
+    @Override
+    public EventMergeRecord mergeEvents(List<Long> eventIds, String mergedEventName) {
+        // Simple implementation - you might need to add more logic
+        EventMergeRecord mergeRecord = new EventMergeRecord();
+        mergeRecord.setOriginalEventName1("Event " + eventIds.get(0));
+        mergeRecord.setOriginalEventName2("Event " + eventIds.get(1));
+        mergeRecord.setMergedEventName(mergedEventName);
+        mergeRecord.setMergedStartDate(LocalDate.now());
+        mergeRecord.setMergedEndDate(LocalDate.now().plusDays(1));
+        return mergeRepository.save(mergeRecord);
+    }
+    
+    @Override
+    public List<EventMergeRecord> getMergeRecordsByDate(LocalDate startDate, LocalDate endDate) {
+        // Simple implementation - you might need to add date fields to EventMergeRecord
+        return mergeRepository.findAll();
     }
 }

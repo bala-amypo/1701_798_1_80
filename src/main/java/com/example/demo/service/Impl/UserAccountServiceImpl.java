@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -24,6 +23,11 @@ public class UserAccountServiceImpl implements UserAccountService {
     
     @Override
     public UserAccount createUser(UserAccount user) {
+        return register(user); // Use register method
+    }
+    
+    @Override
+    public UserAccount register(UserAccount user) {
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
             throw new RuntimeException("Username already exists: " + user.getUsername());
         }
@@ -45,6 +49,11 @@ public class UserAccountServiceImpl implements UserAccountService {
     public UserAccount getUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+    }
+    
+    @Override
+    public UserAccount getUser(Long id) {
+        return getUserById(id); // Alias for getUserById
     }
     
     @Override
@@ -75,12 +84,14 @@ public class UserAccountServiceImpl implements UserAccountService {
     }
     
     @Override
-    public Optional<UserAccount> findByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public UserAccount findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
     }
     
     @Override
-    public Optional<UserAccount> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public UserAccount findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
     }
-}
+}   
