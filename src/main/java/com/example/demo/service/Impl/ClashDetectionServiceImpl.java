@@ -21,7 +21,6 @@ public class ClashDetectionServiceImpl implements ClashDetectionService {
     
     @Override
     public ClashRecord detectClash(Long eventId1, Long eventId2, String description) {
-        // Use the corrected method name
         List<ClashRecord> existingClashes = clashRepository.findByEventId1OrEventId2(eventId1, eventId2);
         
         ClashRecord clash = new ClashRecord();
@@ -41,11 +40,11 @@ public class ClashDetectionServiceImpl implements ClashDetectionService {
     }
     
     @Override
-    public ClashRecord resolveClash(Long clashId, String resolution) {
+    public ClashRecord resolveClash(Long clashId) {  // Single parameter
         ClashRecord clash = clashRepository.findById(clashId)
                 .orElseThrow(() -> new RuntimeException("Clash not found with id: " + clashId));
         
-        clash.setResolution(resolution);
+        clash.setResolution("Auto-resolved");
         clash.setStatus("RESOLVED");
         clash.setResolved(true);
         
