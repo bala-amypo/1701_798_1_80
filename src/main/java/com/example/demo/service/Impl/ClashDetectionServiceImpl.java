@@ -24,19 +24,19 @@ public class ClashDetectionServiceImpl implements ClashDetectionService {
             .orElseThrow(() -> new RuntimeException("Clash record not found"));
         
         clashRecord.setResolved(true);
-        clashRecord.setResolutionNotes(resolutionNotes);
+        // Use setResolution() instead of setResolutionNotes()
+        clashRecord.setResolution(resolutionNotes);
         clashRecordRepository.save(clashRecord);
     }
     
     @Override
     public List<ClashRecord> getClashesForEvent(Long eventId) {
-        return clashRecordRepository.findByEventId(eventId);
+        // You may need to update this method based on your entity structure
+        // If you need to find clashes by either eventId1 or eventId2
+        // return clashRecordRepository.findByEventId1OrEventId2(eventId, eventId);
+        
+        // Or if you have a specific field for eventId (not in your current entity)
+        // You might need to add a new repository method
+        return clashRecordRepository.findByEventId1(eventId);
     }
-    
-    // Remove or fix the incorrect method signature
-    // The following method should be removed if it doesn't match the interface:
-    // @Override
-    // public void resolveClash(Long clashId) { // WRONG - missing resolutionNotes parameter
-    //     // implementation
-    // }
 }
