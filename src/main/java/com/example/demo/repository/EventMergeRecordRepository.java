@@ -3,11 +3,9 @@ package com.example.demo.repository;
 import com.example.demo.entity.EventMergeRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 @Repository
 public interface EventMergeRecordRepository extends JpaRepository<EventMergeRecord, Long> {
-    // Add this method
     List<EventMergeRecord> findByOriginalEventName1OrOriginalEventName2(String eventName1, String eventName2);
 }
