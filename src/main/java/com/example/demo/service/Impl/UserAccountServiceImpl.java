@@ -1,7 +1,5 @@
-package com.example.demo.service.Impl;
+package com.example.demo.service.impl;
 
-import com.example.demo.exception.ValidationException;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.entity.UserAccount;
 import com.example.demo.repository.UserAccountRepository;
 import com.example.demo.service.UserAccountService;
@@ -10,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -24,23 +23,28 @@ public class UserAccountServiceImpl implements UserAccountService {
     }
     
     @Override
-    public UserAccount register(UserAccount user) {
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new ValidationException("Email already registered: " + user.getEmail());
+    public UserAccount createUser(UserAccount user) {
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            throw new RuntimeException("Username already exists: " + user.getUsername());
         }
         
-        if (!isValidRole(user.getRole())) {
-            throw new ValidationException("Invalid role. Must be one of: ADMIN, CALENDAR_MANAGER, REVIEWER");
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already exists: " + user.getEmail());
         }
         
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        
+        if (user.getRole() == null || user.getRole().trim().isEmpty()) {
+            user.setRole("USER");
+        }
+        
         return userRepository.save(user);
     }
     
     @Override
-    public UserAccount getUser(Long id) {
+    public UserAccount getUserById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
     }
     
     @Override
@@ -49,15 +53,34 @@ public class UserAccountServiceImpl implements UserAccountService {
     }
     
     @Override
-    public UserAccount findByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
+    public UserAccount updateUser(Long id, UserAccount userDetails) {
+        UserAccount user = getUserById(id);
+        
+        user.setFirstName(userDetails.getFirstName());
+        user.setLastName(userDetails.getLastName());
+        user.setEmail(userDetails.getEmail());
+        user.setRole(userDetails.getRole());
+        
+        if (userDetails.getPassword() != null && !userDetails.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
+        }
+        
+        return userRepository.save(user);
     }
     
-    private boolean isValidRole(String role) {
-        return role != null && 
-               (role.equals("ADMIN") || 
-                role.equals("CALENDAR_MANAGER") || 
-                role.equals("REVIEWER"));
+    @Override
+    public void deleteUser(Long id) {
+        UserAccount user = getUserById(id);
+        userRepository.delete(user);
+    }
+    
+    @Override
+    public Optional<UserAccount> findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+    
+    @Override
+    public Optional<UserAccount> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }
