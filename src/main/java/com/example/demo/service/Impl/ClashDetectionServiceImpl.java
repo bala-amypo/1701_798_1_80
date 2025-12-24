@@ -21,10 +21,9 @@ public class ClashDetectionServiceImpl implements ClashDetectionService {
     
     @Override
     public ClashRecord detectClash(Long eventId1, Long eventId2, String description) {
-        // Check if clash already exists
+        // Use the corrected method name
         List<ClashRecord> existingClashes = clashRepository.findByEventId1OrEventId2(eventId1, eventId2);
         
-        // Create new clash record
         ClashRecord clash = new ClashRecord();
         clash.setEventId1(eventId1);
         clash.setEventId2(eventId2);

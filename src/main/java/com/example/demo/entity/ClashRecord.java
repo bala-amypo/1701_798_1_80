@@ -83,6 +83,11 @@ public class ClashRecord {
     public boolean isResolved() { return resolved; }
     public void setResolved(boolean resolved) { this.resolved = resolved; }
     
+    // Add this getter for JPA query compatibility
+    public boolean getResolved() {
+        return resolved;
+    }
+    
     @PrePersist
     protected void prePersist() {
         if (createdAt == null) {
