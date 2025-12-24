@@ -29,7 +29,7 @@ public class BranchProfile {
     private LocalDateTime createdAt;
     
     @Column(name = "is_active")
-    private boolean isActive = true;
+    private boolean active = true;  // Changed from isActive to active for JPA compatibility
     
     public BranchProfile() {}
     
@@ -40,13 +40,13 @@ public class BranchProfile {
     }
     
     public BranchProfile(Long id, String branchName, String location, 
-                         String contactInfo, LocalDateTime createdAt, boolean isActive) {
+                         String contactInfo, LocalDateTime createdAt, boolean active) {
         this.id = id;
         this.branchName = branchName;
         this.location = location;
         this.contactInfo = contactInfo;
         this.createdAt = createdAt;
-        this.isActive = isActive;
+        this.active = active;
     }
     
     public Long getId() { return id; }
@@ -76,13 +76,11 @@ public class BranchProfile {
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     
-    public boolean isActive() { return isActive; }
-    public void setActive(boolean active) { isActive = active; }
+    public boolean isActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
     
-    // Add this getter for JPA query compatibility
-    public boolean getActive() {
-        return isActive;
-    }
+    // For JPA query compatibility - returns the same as isActive()
+    public boolean getActive() { return active; }
     
     @PrePersist
     protected void prePersist() {
