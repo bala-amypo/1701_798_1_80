@@ -92,8 +92,7 @@
             <scope>provided</scope>
         </dependency>
         
-        <!-- ⬇️ ADD THESE TEST DEPENDENCIES TO FIX COMPILATION ERRORS ⬇️ -->
-        <!-- TestNG (Required by your test files) -->
+        <!-- Test Dependencies -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
@@ -101,7 +100,6 @@
             <scope>test</scope>
         </dependency>
         
-        <!-- AssertJ for assertions -->
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
@@ -109,7 +107,6 @@
             <scope>test</scope>
         </dependency>
         
-        <!-- Spring Boot Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -127,18 +124,6 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- ⬆️ END OF TEST DEPENDENCIES ⬆️ -->
-
-        <dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-webmvc</artifactId>
-		</dependency>
-
-        <dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-webmvc-test</artifactId>
-			<scope>test</scope>
-		</dependency>
     </dependencies>
     
     <build>
@@ -157,7 +142,7 @@
                 </configuration>
             </plugin>
             
-            <!-- ⬇️ ADD SUREFIRE PLUGIN FOR TESTNG SUPPORT ⬇️ -->
+            <!-- SUREFIRE PLUGIN FOR TESTNG SUPPORT -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
