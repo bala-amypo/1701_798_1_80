@@ -39,9 +39,4 @@ public class EventMergeServiceImpl implements EventMergeService {
         EventMergeRecord record = getMergeRecordById(id);
         mergeRepository.delete(record);
     }
-    
-    @Override
-    public List<EventMergeRecord> findByOriginalEventNames(String eventName1, String eventName2) {
-        return mergeRepository.findByOriginalEventName1OrOriginalEventName2(eventName1, eventName2);
-    }
 }

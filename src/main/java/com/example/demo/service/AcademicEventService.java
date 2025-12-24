@@ -1,5 +1,7 @@
 package com.example.demo.service;
+
 import com.example.demo.entity.AcademicEvent;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface AcademicEventService {
@@ -8,4 +10,6 @@ public interface AcademicEventService {
     AcademicEvent updateEvent(Long id, AcademicEvent event);
     AcademicEvent getEventById(Long id);
     List<AcademicEvent> getAllEvents();
+    void deleteEvent(Long id);
+    List<AcademicEvent> getEventsByDateRange(LocalDate startDate, LocalDate endDate);
 }
