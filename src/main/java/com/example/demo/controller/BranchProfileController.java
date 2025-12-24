@@ -1,47 +1,52 @@
-package com.example.demo.controller;
+package com.example.demo.Controller;
 
-import com.example.demo.entity.BranchProfile;
-import com.example.demo.service.BranchProfileService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.entity.AcademicEvent;
+import com.example.demo.service.AcademicEventService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/branches")
+@RequestMapping("/api/events")
 public class BranchProfileController {
     
-    @Autowired
-    private BranchProfileService branchService;
+    private final AcademicEventService eventService;
     
-    @PostMapping
-    public ResponseEntity<BranchProfile> createBranch(@RequestBody BranchProfile branch) {
-        BranchProfile createdBranch = branchService.createBranch(branch);
-        return ResponseEntity.ok(createdBranch);
+    public BranchProfileController(AcademicEventService eventService) {
+        this.eventService = eventService;
     }
     
-    @GetMapping
-    public ResponseEntity<List<BranchProfile>> getAllBranches() {
-        List<BranchProfile> branches = branchService.getAllBranches();
-        return ResponseEntity.ok(branches);
+    @PostMapping
+    public ResponseEntity<AcademicEvent> createEvent(@RequestBody AcademicEvent event) {
+        AcademicEvent createdEvent = eventService.createEvent(event);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdEvent);
+    }
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<AcademicEvent> updateEvent(
+            @PathVariable Long id, 
+            @RequestBody AcademicEvent event) {
+        AcademicEvent updatedEvent = eventService.updateEvent(id, event);
+        return ResponseEntity.ok(updatedEvent);
+    }
+    
+    @GetMapping("/branch/{branchId}")
+    public ResponseEntity<List<AcademicEvent>> getEventsByBranch(@PathVariable Long branchId) {
+        List<AcademicEvent> events = eventService.getEventsByBranch(branchId);
+        return ResponseEntity.ok(events);
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<BranchProfile> getBranchById(@PathVariable Long id) {
-        BranchProfile branch = branchService.getBranchById(id);
-        return ResponseEntity.ok(branch);
+    public ResponseEntity<AcademicEvent> getEventById(@PathVariable Long id) {
+        AcademicEvent event = eventService.getEventById(id);
+        return ResponseEntity.ok(event);
     }
     
-    @GetMapping("/code/{branchCode}")
-    public ResponseEntity<BranchProfile> getBranchByCode(@PathVariable String branchCode) {
-        BranchProfile branch = branchService.findByBranchCode(branchCode);
-        return ResponseEntity.ok(branch);
-    }
-    
-    @PutMapping("/{id}/status")
-    public ResponseEntity<BranchProfile> updateBranchStatus(@PathVariable Long id, @RequestParam boolean active) {
-        BranchProfile updatedBranch = branchService.updateBranchStatus(id, active);
-        return ResponseEntity.ok(updatedBranch);
+    @GetMapping
+    public ResponseEntity<List<AcademicEvent>> getAllEvents() {
+        List<AcademicEvent> events = eventService.getAllEvents();
+        return ResponseEntity.ok(events);
     }
 }
