@@ -1,6 +1,5 @@
 package com.example.demo.security;
 
-import com.example.demo.entity.UserAccount;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -40,13 +39,9 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
     
-    public String generateToken(UserAccount user) {
+    public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("firstName", user.getFirstName());
-        claims.put("lastName", user.getLastName());
-        claims.put("role", user.getRole());
-        claims.put("branchId", user.getBranchId());
-        return createToken(claims, user.getUsername());
+        return createToken(claims, userDetails.getUsername());
     }
     
     private String createToken(Map<String, Object> claims, String subject) {
