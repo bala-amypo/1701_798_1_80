@@ -1,77 +1,94 @@
 package com.example.demo.service.Impl;
 
-import com.example.demo.exception.ValidationException;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.entity.AcademicEvent;
-import com.example.demo.entity.EventMergeRecord;
+import com.example.demo.entity.BranchProfile;
+import com.example.demo.entity.HarmonizedCalendar;
 import com.example.demo.repository.AcademicEventRepository;
-import com.example.demo.repository.EventMergeRecordRepository;
+import com.example.demo.repository.BranchProfileRepository;
+import com.example.demo.repository.HarmonizedCalendarRepository;
 import com.example.demo.service.EventMergeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class EventMergeServiceImpl implements EventMergeService {
     
-    private final EventMergeRecordRepository mergeRepository;
-    private final AcademicEventRepository eventRepository;
+    @Autowired
+    private AcademicEventRepository academicEventRepository;
     
-    public EventMergeServiceImpl(EventMergeRecordRepository mergeRepository, 
-                                AcademicEventRepository eventRepository) {
-        this.mergeRepository = mergeRepository;
-        this.eventRepository = eventRepository;
-    }
+    @Autowired
+    private BranchProfileRepository branchProfileRepository;
     
-    @Override
-    public EventMergeRecord mergeEvents(List<Long> eventIds, String reason) {
-        if (eventIds == null || eventIds.size() < 2) {
-            throw new ValidationException("At least two events are required for merging");
+    @Autowired
+    private HarmonizedCalendarRepository harmonizedCalendarRepository;
+    
+    public List<HarmonizedCalendar> mergeEvents() {
+        List<HarmonizedCalendar> mergedCalendars = new ArrayList<>();
+        
+        List<AcademicEvent> academicEvents = academicEventRepository.findAll();
+        
+        for (AcademicEvent event : academicEvents) {
+            HarmonizedCalendar calendar = new HarmonizedCalendar();
+            calendar.setCalendarName(event.getEventName());
+            calendar.setDescription(event.getDescription());
+            
+            if (event.getStartTime() != null) {
+                calendar.setEffectiveFrom(event.getStartTime().toLocalDate());
+            }
+            
+            if (event.getEndTime() != null) {
+                calendar.setEffectiveTo(event.getEndTime().toLocalDate());
+            }
+            
+            calendar.setPriority(event.getPriority());
+            calendar.setCalendarId(event.getId());
+            calendar.setCreatedAt(LocalDateTime.now());
+            calendar.setUpdatedAt(LocalDateTime.now());
+            calendar.setIsActive(true);
+            
+            mergedCalendars.add(calendar);
         }
         
-        List<AcademicEvent> events = eventIds.stream()
-                .map(id -> eventRepository.findById(id)
-                        .orElseThrow(() -> new ResourceNotFoundException("Event not found with id: " + id)))
-                .collect(Collectors.toList());
+        harmonizedCalendarRepository.saveAll(mergedCalendars);
         
-        LocalDate earliestStart = events.stream()
-                .map(AcademicEvent::getStartDate)
-                .min(LocalDate::compareTo)
-                .orElseThrow(() -> new ValidationException("No valid start dates found"));
-        
-        LocalDate latestEnd = events.stream()
-                .map(AcademicEvent::getEndDate)
-                .max(LocalDate::compareTo)
-                .orElseThrow(() -> new ValidationException("No valid end dates found"));
-        
-        String mergedTitle = "Merged: " + events.get(0).getTitle();
-        String sourceEventIds = eventIds.stream()
-                .map(String::valueOf)
-                .collect(Collectors.joining(","));
-        
-        EventMergeRecord mergeRecord = new EventMergeRecord(
-                sourceEventIds, mergedTitle, earliestStart, latestEnd, reason);
-        
-        return mergeRepository.save(mergeRecord);
+        return mergedCalendars;
     }
     
-    @Override
-    public List<EventMergeRecord> getAllMergeRecords() {
-        return mergeRepository.findAll();
-    }
-    
-    @Override
-    public EventMergeRecord getMergeRecordById(Long id) {
-        return mergeRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Merge record not found with id: " + id));
-    }
-    
-    @Override
-    public List<EventMergeRecord> getMergeRecordsByDate(LocalDate start, LocalDate end) {
-        return mergeRepository.findByMergedStartDateBetween(start, end);
+    public List<HarmonizedCalendar> mergeEventsByDateRange(LocalDate startDate, LocalDate endDate) {
+        List<HarmonizedCalendar> mergedCalendars = new ArrayList<>();
+        
+        List<AcademicEvent> academicEvents = academicEventRepository.findAll();
+        
+        for (AcademicEvent event : academicEvents) {
+            if (event.getStartTime() != null && 
+                !event.getStartTime().toLocalDate().isBefore(startDate) &&
+                !event.getStartTime().toLocalDate().isAfter(endDate)) {
+                
+                HarmonizedCalendar calendar = new HarmonizedCalendar();
+                calendar.setCalendarName(event.getEventName());
+                calendar.setDescription(event.getDescription());
+                calendar.setEffectiveFrom(event.getStartTime().toLocalDate());
+                
+                if (event.getEndTime() != null) {
+                    calendar.setEffectiveTo(event.getEndTime().toLocalDate());
+                }
+                
+                calendar.setPriority(event.getPriority());
+                calendar.setCalendarId(event.getId());
+                calendar.setCreatedAt(LocalDateTime.now());
+                calendar.setUpdatedAt(LocalDateTime.now());
+                calendar.setIsActive(true);
+                
+                mergedCalendars.add(calendar);
+            }
+        }
+        
+        harmonizedCalendarRepository.saveAll(mergedCalendars);
+        
+        return mergedCalendars;
     }
 }
