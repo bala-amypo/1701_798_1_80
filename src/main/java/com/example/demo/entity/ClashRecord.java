@@ -2,11 +2,15 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "clash_records")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ClashRecord {
     
     @Id
@@ -29,7 +33,7 @@ public class ClashRecord {
     private LocalDateTime detectedAt;
     
     @Column(name = "resolved")
-    private boolean resolved;
+    private Boolean resolved = false;
     
     @Column(name = "resolution")
     private String resolution;
@@ -38,9 +42,6 @@ public class ClashRecord {
     protected void onCreate() {
         if (detectedAt == null) {
             detectedAt = LocalDateTime.now();
-        }
-        if (!resolved) {
-            resolved = false;
         }
     }
 }

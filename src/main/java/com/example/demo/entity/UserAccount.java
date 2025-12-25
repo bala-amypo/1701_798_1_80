@@ -2,10 +2,14 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 @Entity
 @Table(name = "user_accounts")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserAccount {
     
     @Id
@@ -34,7 +38,22 @@ public class UserAccount {
     private Long branchId;
     
     @Column(name = "is_active")
-    private boolean active = true;
+    private Boolean isActive = true;
     
-    // ... other fields and methods
+    @Column(name = "created_at")
+    private java.time.LocalDateTime createdAt;
+    
+    @Column(name = "updated_at")
+    private java.time.LocalDateTime updatedAt;
+    
+    @PrePersist
+    protected void onCreate() {
+        createdAt = java.time.LocalDateTime.now();
+        updatedAt = java.time.LocalDateTime.now();
+    }
+    
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = java.time.LocalDateTime.now();
+    }
 }

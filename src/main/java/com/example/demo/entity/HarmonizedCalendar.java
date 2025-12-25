@@ -37,7 +37,7 @@ public class HarmonizedCalendar {
     private Integer priority;
     
     @Column(name = "is_active")
-    private Boolean isActive;
+    private Boolean isActive = true;
     
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -47,15 +47,8 @@ public class HarmonizedCalendar {
     
     @PrePersist
     protected void onCreate() {
-        if (createdAt == null) {
-            createdAt = LocalDateTime.now();
-        }
-        if (updatedAt == null) {
-            updatedAt = LocalDateTime.now();
-        }
-        if (isActive == null) {
-            isActive = true;
-        }
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
     
     @PreUpdate

@@ -2,10 +2,14 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 @Entity
 @Table(name = "branch_profiles")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class BranchProfile {
     
     @Id
@@ -31,5 +35,5 @@ public class BranchProfile {
     private String address;
     
     @Column(name = "is_active")
-    private boolean active;
+    private Boolean isActive = true;
 }

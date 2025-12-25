@@ -2,11 +2,15 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "academic_events")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AcademicEvent {
     
     @Id
