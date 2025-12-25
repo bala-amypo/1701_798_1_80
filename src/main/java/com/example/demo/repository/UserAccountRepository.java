@@ -15,7 +15,8 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
     
     List<UserAccount> findByBranchId(Long branchId);
     
-    List<UserAccount> findByActive(boolean active);
+    // Change from findByActive to findByIsActive
+    List<UserAccount> findByIsActive(Boolean isActive);
     
     Optional<UserAccount> findByEmail(String email);
 }
