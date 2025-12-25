@@ -4,10 +4,10 @@ import com.example.demo.entity.ClashRecord;
 import java.util.List;
 
 public interface ClashDetectionService {
-    ClashRecord detectClash(Long eventId1, Long eventId2, String clashType, String severity);
-    List<ClashRecord> getClashesByEvent(Long eventId);
-    List<ClashRecord> getAllClashes();
-    ClashRecord resolveClash(Long clashId, String resolution);
-    List<ClashRecord> getUnresolvedClashes();
-    List<ClashRecord> getClashesByType(String clashType);
+    List<ClashRecord> detectClashes();
+    List<ClashRecord> getAllClashRecords();
+    ClashRecord getClashRecordById(Long id);
+    ClashRecord saveClashRecord(ClashRecord clashRecord);
+    ClashRecord updateClashRecordStatus(Long id, String status);
+    void deleteClashRecord(Long id);
 }

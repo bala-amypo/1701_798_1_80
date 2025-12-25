@@ -1,12 +1,15 @@
-package com.example.demo.model;
+package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
-@Table(name = "user_account")
-public class UserAccount {
-    
+@Table(name = "user_accounts")
+public class UserAccount implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,100 +20,50 @@ public class UserAccount {
     @Column(nullable = false)
     private String password;
     
-    @Column(nullable = false)
     private String email;
+    private String fullName;
     
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role")
-    private String role;
+    private Set<String> roles = new HashSet<>();
     
-    @Column(name = "branch_id")
-    private Long branchId;
+    // Getters and setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
     
-    @Column(name = "is_active")
-    private Boolean active = true;
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
     
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
     
-    public Long getId() {
-        return id;
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    
+    public String getFullName() { return fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
+    
+    public Set<String> getRoles() { return roles; }
+    public void setRoles(Set<String> roles) { this.roles = roles; }
+    
+    // UserDetails methods
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles.stream()
+            .map(role -> (GrantedAuthority) () -> "ROLE_" + role)
+            .toList();
     }
     
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @Override
+    public boolean isAccountNonExpired() { return true; }
     
-    public String getUsername() {
-        return username;
-    }
+    @Override
+    public boolean isAccountNonLocked() { return true; }
     
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    @Override
+    public boolean isCredentialsNonExpired() { return true; }
     
-    public String getPassword() {
-        return password;
-    }
-    
-    public void setPassword(String password) {
-        this.password = password;
-    }
-    
-    public String getEmail() {
-        return email;
-    }
-    
-    public void setEmail(String email) {
-        this.email = email;
-    }
-    
-    public String getRole() {
-        return role;
-    }
-    
-    public void setRole(String role) {
-        this.role = role;
-    }
-    
-    public Long getBranchId() {
-        return branchId;
-    }
-    
-    public void setBranchId(Long branchId) {
-        this.branchId = branchId;
-    }
-    
-    public Boolean getActive() {
-        return active;
-    }
-    
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-    
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-    
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-    
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-    
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-    
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-    }
-    
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
+    @Override
+    public boolean isEnabled() { return true; }
 }

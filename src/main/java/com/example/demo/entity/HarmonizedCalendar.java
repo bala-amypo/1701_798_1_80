@@ -1,122 +1,49 @@
-package com.example.demo.model;
+package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "harmonized_calendar")
+@Table(name = "harmonized_calendars")
 public class HarmonizedCalendar {
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long calendarId;
+    private Long id;
     
-    @Column(name = "calendar_name", nullable = false)
-    private String calendarName;
-    
-    @Column(name = "description")
+    private String eventName;
     private String description;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+    private String location;
+    private String sourceSystem; // e.g., "academic", "personal", "work"
+    private String eventType;
+    private Long originalEventId; // ID from the source system
     
-    @Column(name = "effective_from")
-    private LocalDateTime effectiveFrom;
+    // Getters and setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
     
-    @Column(name = "effective_to")
-    private LocalDateTime effectiveTo;
+    public String getEventName() { return eventName; }
+    public void setEventName(String eventName) { this.eventName = eventName; }
     
-    @Column(name = "priority")
-    private Integer priority;
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
     
-    @Column(name = "is_active")
-    private Boolean isActive = true;
+    public LocalDateTime getStartTime() { return startTime; }
+    public void setStartTime(LocalDateTime startTime) { this.startTime = startTime; }
     
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    public LocalDateTime getEndTime() { return endTime; }
+    public void setEndTime(LocalDateTime endTime) { this.endTime = endTime; }
     
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    public String getLocation() { return location; }
+    public void setLocation(String location) { this.location = location; }
     
-    public Long getCalendarId() {
-        return calendarId;
-    }
+    public String getSourceSystem() { return sourceSystem; }
+    public void setSourceSystem(String sourceSystem) { this.sourceSystem = sourceSystem; }
     
-    public void setCalendarId(Long calendarId) {
-        this.calendarId = calendarId;
-    }
+    public String getEventType() { return eventType; }
+    public void setEventType(String eventType) { this.eventType = eventType; }
     
-    public String getCalendarName() {
-        return calendarName;
-    }
-    
-    public void setCalendarName(String calendarName) {
-        this.calendarName = calendarName;
-    }
-    
-    public String getDescription() {
-        return description;
-    }
-    
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    
-    public LocalDateTime getEffectiveFrom() {
-        return effectiveFrom;
-    }
-    
-    public void setEffectiveFrom(LocalDateTime effectiveFrom) {
-        this.effectiveFrom = effectiveFrom;
-    }
-    
-    public LocalDateTime getEffectiveTo() {
-        return effectiveTo;
-    }
-    
-    public void setEffectiveTo(LocalDateTime effectiveTo) {
-        this.effectiveTo = effectiveTo;
-    }
-    
-    public Integer getPriority() {
-        return priority;
-    }
-    
-    public void setPriority(Integer priority) {
-        this.priority = priority;
-    }
-    
-    public Boolean getIsActive() {
-        return isActive;
-    }
-    
-    public void setIsActive(Boolean isActive) {
-        this.isActive = isActive;
-    }
-    
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-    
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-    
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-    
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-    
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        if (isActive == null) {
-            isActive = true;
-        }
-    }
-    
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
+    public Long getOriginalEventId() { return originalEventId; }
+    public void setOriginalEventId(Long originalEventId) { this.originalEventId = originalEventId; }
 }

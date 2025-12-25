@@ -1,17 +1,16 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.HarmonizedCalendar;
-import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface HarmonizedCalendarService {
-    HarmonizedCalendar createCalendar(HarmonizedCalendar calendar);
-    HarmonizedCalendar getCalendarById(Long id);
-    List<HarmonizedCalendar> getAllCalendars();
-    HarmonizedCalendar updateCalendar(Long id, HarmonizedCalendar calendarDetails);
-    boolean deleteCalendar(Long id);
-    List<HarmonizedCalendar> getCalendarsByDateRange(LocalDate startDate, LocalDate endDate);
-    List<HarmonizedCalendar> searchCalendarsByName(String name);
-    List<HarmonizedCalendar> getActiveCalendars();
-    List<HarmonizedCalendar> getCalendarsByPriority(Integer priority);
+    List<HarmonizedCalendar> getAllHarmonizedCalendars();
+    Optional<HarmonizedCalendar> getHarmonizedCalendarById(Long id);
+    HarmonizedCalendar saveHarmonizedCalendar(HarmonizedCalendar harmonizedCalendar);
+    HarmonizedCalendar updateHarmonizedCalendar(Long id, HarmonizedCalendar harmonizedCalendar);
+    void deleteHarmonizedCalendar(Long id);
+    List<HarmonizedCalendar> getEventsByDateRange(String startDate, String endDate);
+    List<HarmonizedCalendar> getEventsBySource(String sourceSystem);
+    List<HarmonizedCalendar> getEventsByType(String eventType);
 }

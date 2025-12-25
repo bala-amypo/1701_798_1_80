@@ -1,50 +1,45 @@
-package com.example.demo.model;
+package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "clash_record")
+@Table(name = "clash_records")
 public class ClashRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(name = "event_id1")
-    private Long eventId1;
+    private Long event1Id;
+    private String event1Name;
+    private Long event2Id;
+    private String event2Name;
+    private LocalDateTime clashTime;
+    private String clashType; // e.g., "time", "location", "both"
+    private String status; // e.g., "pending", "resolved", "ignored"
     
-    @Column(name = "event_id2")
-    private Long eventId2;
-    
-    @Column(name = "clash_type")
-    private String clashType;
-    
-    @Column(name = "severity")
-    private String severity;
-    
-    @Column(name = "detected_at")
-    private LocalDateTime detectedAt;
-    
-    @Column(name = "resolved")
-    private boolean resolved = false;
-    
-    @Column(name = "resolution")
-    private String resolution;
-    
+    // Getters and setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-    public Long getEventId1() { return eventId1; }
-    public void setEventId1(Long eventId1) { this.eventId1 = eventId1; }
-    public Long getEventId2() { return eventId2; }
-    public void setEventId2(Long eventId2) { this.eventId2 = eventId2; }
+    
+    public Long getEvent1Id() { return event1Id; }
+    public void setEvent1Id(Long event1Id) { this.event1Id = event1Id; }
+    
+    public String getEvent1Name() { return event1Name; }
+    public void setEvent1Name(String event1Name) { this.event1Name = event1Name; }
+    
+    public Long getEvent2Id() { return event2Id; }
+    public void setEvent2Id(Long event2Id) { this.event2Id = event2Id; }
+    
+    public String getEvent2Name() { return event2Name; }
+    public void setEvent2Name(String event2Name) { this.event2Name = event2Name; }
+    
+    public LocalDateTime getClashTime() { return clashTime; }
+    public void setClashTime(LocalDateTime clashTime) { this.clashTime = clashTime; }
+    
     public String getClashType() { return clashType; }
     public void setClashType(String clashType) { this.clashType = clashType; }
-    public String getSeverity() { return severity; }
-    public void setSeverity(String severity) { this.severity = severity; }
-    public LocalDateTime getDetectedAt() { return detectedAt; }
-    public void setDetectedAt(LocalDateTime detectedAt) { this.detectedAt = detectedAt; }
-    public boolean isResolved() { return resolved; }
-    public void setResolved(boolean resolved) { this.resolved = resolved; }
-    public String getResolution() { return resolution; }
-    public void setResolution(String resolution) { this.resolution = resolution; }
+    
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 }

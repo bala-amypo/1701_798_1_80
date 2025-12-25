@@ -6,52 +6,40 @@ import com.example.demo.service.AcademicEventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AcademicEventServiceImpl implements AcademicEventService {
     
     @Autowired
-    private AcademicEventRepository eventRepository;
+    private AcademicEventRepository academicEventRepository;
     
     @Override
-    public AcademicEvent createEvent(AcademicEvent academicEvent) {
-        return eventRepository.save(academicEvent);
+    public List<AcademicEvent> getAllAcademicEvents() {
+        return academicEventRepository.findAll();
     }
     
     @Override
-    public AcademicEvent getEventById(Long id) {
-        return eventRepository.findById(id).orElse(null);
+    public Optional<AcademicEvent> getAcademicEventById(Long id) {
+        return academicEventRepository.findById(id);
     }
     
     @Override
-    public List<AcademicEvent> getAllEvents() {
-        return eventRepository.findAll();
+    public AcademicEvent saveAcademicEvent(AcademicEvent academicEvent) {
+        return academicEventRepository.save(academicEvent);
     }
     
     @Override
-    public AcademicEvent updateEvent(Long id, AcademicEvent eventDetails) {
-        AcademicEvent event = eventRepository.findById(id).orElse(null);
-        if (event != null) {
-            event.setEventName(eventDetails.getEventName());
-            event.setEventType(eventDetails.getEventType());
-            event.setStartTime(eventDetails.getStartTime());
-            event.setEndTime(eventDetails.getEndTime());
-            event.setLocation(eventDetails.getLocation());
-            event.setOrganizer(eventDetails.getOrganizer());
-            event.setDescription(eventDetails.getDescription());
-            event.setPriority(eventDetails.getPriority());
-            event.setRecurrencePattern(eventDetails.getRecurrencePattern());
-            return eventRepository.save(event);
+    public AcademicEvent updateAcademicEvent(Long id, AcademicEvent academicEvent) {
+        if (academicEventRepository.existsById(id)) {
+            academicEvent.setId(id);
+            return academicEventRepository.save(academicEvent);
         }
         return null;
     }
     
     @Override
-    public boolean deleteEvent(Long id) {
-        if (eventRepository.existsById(id)) {
-            eventRepository.deleteById(id);
-            return true;
-        }
-        return false;
+    public void deleteAcademicEvent(Long id) {
+        academicEventRepository.deleteById(id);
     }
 }

@@ -8,14 +8,9 @@ import java.util.List;
 
 @Repository
 public interface AcademicEventRepository extends JpaRepository<AcademicEvent, Long> {
-    
-    List<AcademicEvent> findByEventNameContaining(String eventName);
-    
+    List<AcademicEvent> findByCourseCode(String courseCode);
     List<AcademicEvent> findByEventType(String eventType);
-    
     List<AcademicEvent> findByStartTimeBetween(LocalDateTime start, LocalDateTime end);
-    
     List<AcademicEvent> findByLocation(String location);
-    
-    List<AcademicEvent> findByOrganizer(String organizer);
+    List<AcademicEvent> findByTitleContaining(String title);
 }
