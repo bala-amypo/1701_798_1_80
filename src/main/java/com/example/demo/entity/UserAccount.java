@@ -41,7 +41,6 @@ public class UserAccount {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
     
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     

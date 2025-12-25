@@ -40,7 +40,7 @@ public class UserAccountServiceImpl implements UserAccountService {
             user.setLastName(userDetails.getLastName());
             user.setRole(userDetails.getRole());
             user.setBranchId(userDetails.getBranchId());
-            user.setActive(userDetails.isActive());
+            user.setIsActive(userDetails.getIsActive());
             return userAccountRepository.save(user);
         }
         return null;
