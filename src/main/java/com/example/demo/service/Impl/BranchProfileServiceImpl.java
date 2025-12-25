@@ -38,7 +38,7 @@ public class BranchProfileServiceImpl implements BranchProfileService {
             branch.setContactEmail(branchDetails.getContactEmail());
             branch.setContactPhone(branchDetails.getContactPhone());
             branch.setAddress(branchDetails.getAddress());
-            branch.setIsActive(branchDetails.getIsActive());
+            branch.setIsActive(branchDetails.getIsActive());  // This should match BranchProfile entity
             return branchRepository.save(branch);
         }
         return null;
