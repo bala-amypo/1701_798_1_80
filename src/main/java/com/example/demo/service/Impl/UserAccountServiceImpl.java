@@ -6,6 +6,7 @@ import com.example.demo.service.UserAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserAccountServiceImpl implements UserAccountService {
@@ -34,6 +35,7 @@ public class UserAccountServiceImpl implements UserAccountService {
         if (user != null) {
             user.setUsername(userDetails.getUsername());
             user.setEmail(userDetails.getEmail());
+            user.setPasswordHash(userDetails.getPasswordHash());
             user.setRole(userDetails.getRole());
             user.setBranchId(userDetails.getBranchId());
             user.setActive(userDetails.isActive());
@@ -53,7 +55,8 @@ public class UserAccountServiceImpl implements UserAccountService {
     
     @Override
     public UserAccount getUserByUsername(String username) {
-        return userAccountRepository.findByUsername(username);
+        Optional<UserAccount> user = userAccountRepository.findByUsername(username);
+        return user.orElse(null);
     }
     
     @Override
