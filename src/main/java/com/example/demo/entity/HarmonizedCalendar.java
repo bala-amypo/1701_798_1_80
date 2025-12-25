@@ -1,11 +1,15 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "harmonized_calendars")
+@Data
+@NoArgsConstructor
 public class HarmonizedCalendar {
     
     @Id
@@ -22,7 +26,7 @@ public class HarmonizedCalendar {
     private String description;
     
     @Column(name = "effective_from")
-    private LocalDate effectiveFrom;  // 确保有这个字段
+    private LocalDate effectiveFrom;
     
     @Column(name = "effective_to")
     private LocalDate effectiveTo;
@@ -39,92 +43,17 @@ public class HarmonizedCalendar {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
     
-    // 构造器
-    public HarmonizedCalendar() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-        this.isActive = true;
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+        if (isActive == null) {
+            isActive = true;
+        }
     }
     
-    // Getters 和 Setters
-    
-    public Long getId() {
-        return id;
-    }
-    
-    public void setId(Long id) {
-        this.id = id;
-    }
-    
-    public Long getCalendarId() {
-        return calendarId;
-    }
-    
-    public void setCalendarId(Long calendarId) {
-        this.calendarId = calendarId;
-    }
-    
-    public String getCalendarName() {
-        return calendarName;
-    }
-    
-    public void setCalendarName(String calendarName) {
-        this.calendarName = calendarName;
-    }
-    
-    public String getDescription() {
-        return description;
-    }
-    
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    
-    public LocalDate getEffectiveFrom() {
-        return effectiveFrom;
-    }
-    
-    public void setEffectiveFrom(LocalDate effectiveFrom) {
-        this.effectiveFrom = effectiveFrom;
-    }
-    
-    public LocalDate getEffectiveTo() {
-        return effectiveTo;
-    }
-    
-    public void setEffectiveTo(LocalDate effectiveTo) {
-        this.effectiveTo = effectiveTo;
-    }
-    
-    public Integer getPriority() {
-        return priority;
-    }
-    
-    public void setPriority(Integer priority) {
-        this.priority = priority;
-    }
-    
-    public Boolean getIsActive() {
-        return isActive;
-    }
-    
-    public void setIsActive(Boolean isActive) {
-        this.isActive = isActive;
-    }
-    
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-    
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-    
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-    
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
     }
 }
