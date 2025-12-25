@@ -10,7 +10,6 @@ import java.util.Optional;
 @Repository
 public interface UserAccountRepository extends JpaRepository<UserAccount, Long> {
     
-    // CHANGE THIS: from findByIsActive to findByActive
     List<UserAccount> findByActive(Boolean active);
     
     List<UserAccount> findByRole(String role);
