@@ -1,10 +1,8 @@
 package com.example.demo.service.Impl;
 
 import com.example.demo.entity.AcademicEvent;
-import com.example.demo.entity.BranchProfile;
 import com.example.demo.entity.HarmonizedCalendar;
 import com.example.demo.repository.AcademicEventRepository;
-import com.example.demo.repository.BranchProfileRepository;
 import com.example.demo.repository.HarmonizedCalendarRepository;
 import com.example.demo.service.EventMergeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +19,9 @@ public class EventMergeServiceImpl implements EventMergeService {
     private AcademicEventRepository academicEventRepository;
     
     @Autowired
-    private BranchProfileRepository branchProfileRepository;
-    
-    @Autowired
     private HarmonizedCalendarRepository harmonizedCalendarRepository;
     
+    @Override
     public List<HarmonizedCalendar> mergeEvents() {
         List<HarmonizedCalendar> mergedCalendars = new ArrayList<>();
         
@@ -58,6 +54,7 @@ public class EventMergeServiceImpl implements EventMergeService {
         return mergedCalendars;
     }
     
+    @Override
     public List<HarmonizedCalendar> mergeEventsByDateRange(LocalDate startDate, LocalDate endDate) {
         List<HarmonizedCalendar> mergedCalendars = new ArrayList<>();
         
@@ -90,5 +87,10 @@ public class EventMergeServiceImpl implements EventMergeService {
         harmonizedCalendarRepository.saveAll(mergedCalendars);
         
         return mergedCalendars;
+    }
+    
+    @Override
+    public List<HarmonizedCalendar> getMergeRecordsByDate(LocalDate startDate, LocalDate endDate) {
+        return harmonizedCalendarRepository.findByEffectiveFromBetween(startDate, endDate);
     }
 }
