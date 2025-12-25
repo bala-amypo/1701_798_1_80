@@ -17,6 +17,10 @@ public class ClashRecord {
     private LocalDateTime clashTime;
     private String clashType; // e.g., "time", "location", "both"
     private String status; // e.g., "pending", "resolved", "ignored"
+    private boolean resolved; // Add this field
+    private LocalDateTime detectedAt; // Add this field
+    private String severity; // Add this field
+    private String resolution; // Add this field
     
     // Getters and setters
     public Long getId() { return id; }
@@ -42,4 +46,17 @@ public class ClashRecord {
     
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+    
+    // New getters and setters
+    public boolean isResolved() { return resolved; }
+    public void setResolved(boolean resolved) { this.resolved = resolved; }
+    
+    public LocalDateTime getDetectedAt() { return detectedAt; }
+    public void setDetectedAt(LocalDateTime detectedAt) { this.detectedAt = detectedAt; }
+    
+    public String getSeverity() { return severity; }
+    public void setSeverity(String severity) { this.severity = severity; }
+    
+    public String getResolution() { return resolution; }
+    public void setResolution(String resolution) { this.resolution = resolution; }
 }

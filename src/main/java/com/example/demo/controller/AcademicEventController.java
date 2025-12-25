@@ -15,41 +15,31 @@ public class AcademicEventController {
     private AcademicEventService academicEventService;
     
     @PostMapping
-    public ResponseEntity<AcademicEvent> createEvent(@RequestBody AcademicEvent academicEvent) {
-        AcademicEvent createdEvent = academicEventService.createEvent(academicEvent);
-        return ResponseEntity.ok(createdEvent);
+    public ResponseEntity<AcademicEvent> createAcademicEvent(@RequestBody AcademicEvent academicEvent) {
+        return ResponseEntity.ok(academicEventService.saveAcademicEvent(academicEvent));
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<AcademicEvent> getEventById(@PathVariable Long id) {
-        AcademicEvent academicEvent = academicEventService.getEventById(id);
-        if (academicEvent != null) {
-            return ResponseEntity.ok(academicEvent);
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<AcademicEvent> getAcademicEventById(@PathVariable Long id) {
+        return academicEventService.getAcademicEventById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
     
     @GetMapping
-    public ResponseEntity<List<AcademicEvent>> getAllEvents() {
-        List<AcademicEvent> events = academicEventService.getAllEvents();
-        return ResponseEntity.ok(events);
+    public ResponseEntity<List<AcademicEvent>> getAllAcademicEvents() {
+        return ResponseEntity.ok(academicEventService.getAllAcademicEvents());
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<AcademicEvent> updateEvent(@PathVariable Long id, @RequestBody AcademicEvent eventDetails) {
-        AcademicEvent updatedEvent = academicEventService.updateEvent(id, eventDetails);
-        if (updatedEvent != null) {
-            return ResponseEntity.ok(updatedEvent);
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<AcademicEvent> updateAcademicEvent(@PathVariable Long id, @RequestBody AcademicEvent academicEvent) {
+        AcademicEvent updated = academicEventService.updateAcademicEvent(id, academicEvent);
+        return updated != null ? ResponseEntity.ok(updated) : ResponseEntity.notFound().build();
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEvent(@PathVariable Long id) {
-        boolean deleted = academicEventService.deleteEvent(id);
-        if (deleted) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<Void> deleteAcademicEvent(@PathVariable Long id) {
+        academicEventService.deleteAcademicEvent(id);
+        return ResponseEntity.noContent().build();
     }
 }

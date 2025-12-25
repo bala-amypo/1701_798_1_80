@@ -10,4 +10,5 @@ public interface ClashRecordRepository extends JpaRepository<ClashRecord, Long> 
     List<ClashRecord> findByStatus(String status);
     List<ClashRecord> findByClashType(String clashType);
     List<ClashRecord> findByEvent1IdOrEvent2Id(Long event1Id, Long event2Id);
-}
+    List<ClashRecord> findByResolved(boolean resolved); // Add this method
+}   

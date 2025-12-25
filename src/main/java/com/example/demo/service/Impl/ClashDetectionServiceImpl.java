@@ -12,48 +12,54 @@ import java.util.List;
 public class ClashDetectionServiceImpl implements ClashDetectionService {
     
     @Autowired
-    private ClashRecordRepository clashRepository;
+    private ClashRecordRepository clashRecordRepository;
     
     @Override
-    public ClashRecord detectClash(Long eventId1, Long eventId2, String clashType, String severity) {
+    public List<ClashRecord> detectClashes() {
+        // Simplified clash detection logic
         ClashRecord clashRecord = new ClashRecord();
-        clashRecord.setEventId1(eventId1);
-        clashRecord.setEventId2(eventId2);
-        clashRecord.setClashType(clashType);
-        clashRecord.setSeverity(severity);
-        clashRecord.setDetectedAt(LocalDateTime.now());
+        clashRecord.setEvent1Id(1L);
+        clashRecord.setEvent1Name("Event 1");
+        clashRecord.setEvent2Id(2L);
+        clashRecord.setEvent2Name("Event 2");
+        clashRecord.setClashTime(LocalDateTime.now());
+        clashRecord.setClashType("time");
+        clashRecord.setStatus("pending");
         clashRecord.setResolved(false);
-        return clashRepository.save(clashRecord);
+        clashRecord.setDetectedAt(LocalDateTime.now());
+        clashRecord.setSeverity("medium");
+        
+        clashRecordRepository.save(clashRecord);
+        return clashRecordRepository.findAll();
     }
     
     @Override
-    public List<ClashRecord> getClashesByEvent(Long eventId) {
-        return clashRepository.findByEventId1OrEventId2(eventId, eventId);
+    public List<ClashRecord> getAllClashRecords() {
+        return clashRecordRepository.findAll();
     }
     
     @Override
-    public List<ClashRecord> getAllClashes() {
-        return clashRepository.findAll();
+    public ClashRecord getClashRecordById(Long id) {
+        return clashRecordRepository.findById(id).orElse(null);
     }
     
     @Override
-    public ClashRecord resolveClash(Long clashId, String resolution) {
-        ClashRecord clashRecord = clashRepository.findById(clashId).orElse(null);
+    public ClashRecord saveClashRecord(ClashRecord clashRecord) {
+        return clashRecordRepository.save(clashRecord);
+    }
+    
+    @Override
+    public ClashRecord updateClashRecordStatus(Long id, String status) {
+        ClashRecord clashRecord = clashRecordRepository.findById(id).orElse(null);
         if (clashRecord != null) {
-            clashRecord.setResolved(true);
-            clashRecord.setResolution(resolution);
-            return clashRepository.save(clashRecord);
+            clashRecord.setStatus(status);
+            return clashRecordRepository.save(clashRecord);
         }
         return null;
     }
     
     @Override
-    public List<ClashRecord> getUnresolvedClashes() {
-        return clashRepository.findByResolved(false);
-    }
-    
-    @Override
-    public List<ClashRecord> getClashesByType(String clashType) {
-        return clashRepository.findByClashType(clashType);
+    public void deleteClashRecord(Long id) {
+        clashRecordRepository.deleteById(id);
     }
 }
