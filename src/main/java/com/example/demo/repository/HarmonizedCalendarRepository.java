@@ -8,12 +8,6 @@ import java.util.List;
 
 @Repository
 public interface HarmonizedCalendarRepository extends JpaRepository<HarmonizedCalendar, Long> {
-    
-    List<HarmonizedCalendar> findByEffectiveFromBetween(LocalDate startDate, LocalDate endDate);
-    
-    List<HarmonizedCalendar> findByCalendarNameContaining(String name);
-    
-    List<HarmonizedCalendar> findByIsActive(Boolean isActive);
-    
-    List<HarmonizedCalendar> findByPriority(Integer priority);
+        List<HarmonizedCalendar> findByEffectiveFromBetween(LocalDate start, LocalDate end);
+        List<HarmonizedCalendar> findByEffectiveFromLessThanEqualAndEffectiveToGreaterThanEqual(LocalDate date, LocalDate date2);
 }
