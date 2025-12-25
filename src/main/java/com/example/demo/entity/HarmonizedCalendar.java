@@ -7,83 +7,124 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "harmonized_calendars")
 public class HarmonizedCalendar {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @Column(name = "calendar_id", nullable = false)
+    private Long calendarId;
+    
     @Column(name = "calendar_name", nullable = false)
     private String calendarName;
     
-    @Column(name = "description", columnDefinition = "TEXT")
+    @Column(name = "description")
     private String description;
+    
+    @Column(name = "effective_from")
+    private LocalDate effectiveFrom;  // 确保有这个字段
+    
+    @Column(name = "effective_to")
+    private LocalDate effectiveTo;
+    
+    @Column(name = "priority")
+    private Integer priority;
+    
+    @Column(name = "is_active")
+    private Boolean isActive;
     
     @Column(name = "created_at")
     private LocalDateTime createdAt;
     
-    @Column(name = "start_date", nullable = false)
-    private LocalDate startDate;
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
     
-    @Column(name = "end_date", nullable = false)
-    private LocalDate endDate;
-    
-    @Column(name = "status")
-    private String status;
-    
-    // Default constructor
-    public HarmonizedCalendar() {}
-    
-    // Constructor with 5 parameters
-    public HarmonizedCalendar(String calendarName, String description,
-                             LocalDate startDate, LocalDate endDate, String status) {
-        this.calendarName = calendarName;
-        this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.status = status;
+    // 构造器
+    public HarmonizedCalendar() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+        this.isActive = true;
     }
     
-    // Constructor with 7 parameters (for test compatibility)
-    public HarmonizedCalendar(Long id, String calendarName, String description,
-                             LocalDateTime createdAt, LocalDate startDate,
-                             LocalDate endDate, String status) {
+    // Getters 和 Setters
+    
+    public Long getId() {
+        return id;
+    }
+    
+    public void setId(Long id) {
         this.id = id;
-        this.calendarName = calendarName;
-        this.description = description;
-        this.createdAt = createdAt;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.status = status;
     }
     
-    // Getters and setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getCalendarId() {
+        return calendarId;
+    }
     
-    public String getCalendarName() { return calendarName; }
-    public void setCalendarName(String calendarName) { this.calendarName = calendarName; }
+    public void setCalendarId(Long calendarId) {
+        this.calendarId = calendarId;
+    }
     
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public String getCalendarName() {
+        return calendarName;
+    }
     
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public void setCalendarName(String calendarName) {
+        this.calendarName = calendarName;
+    }
     
-    public LocalDate getStartDate() { return startDate; }
-    public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
+    public String getDescription() {
+        return description;
+    }
     
-    public LocalDate getEndDate() { return endDate; }
-    public void setEndDate(LocalDate endDate) { this.endDate = endDate; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
     
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public LocalDate getEffectiveFrom() {
+        return effectiveFrom;
+    }
     
-    @PrePersist
-    protected void prePersist() {
-        if (createdAt == null) {
-            createdAt = LocalDateTime.now();
-        }
-        if (status == null) {
-            status = "DRAFT";
-        }
+    public void setEffectiveFrom(LocalDate effectiveFrom) {
+        this.effectiveFrom = effectiveFrom;
+    }
+    
+    public LocalDate getEffectiveTo() {
+        return effectiveTo;
+    }
+    
+    public void setEffectiveTo(LocalDate effectiveTo) {
+        this.effectiveTo = effectiveTo;
+    }
+    
+    public Integer getPriority() {
+        return priority;
+    }
+    
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+    
+    public Boolean getIsActive() {
+        return isActive;
+    }
+    
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
+    
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+    
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+    
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+    
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }
