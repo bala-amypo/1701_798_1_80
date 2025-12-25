@@ -36,20 +36,5 @@ public class UserAccount {
     @Column(name = "is_active")
     private boolean active = true;
     
-    @Column(name = "created_at")
-    private java.time.LocalDateTime createdAt;
-    
-    @Column(name = "updated_at")
-    private java.time.LocalDateTime updatedAt;
-    
-    @PrePersist
-    protected void onCreate() {
-        createdAt = java.time.LocalDateTime.now();
-        updatedAt = java.time.LocalDateTime.now();
-    }
-    
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = java.time.LocalDateTime.now();
-    }
+    // ... other fields and methods
 }
