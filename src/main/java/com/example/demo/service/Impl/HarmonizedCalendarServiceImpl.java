@@ -18,8 +18,6 @@ public class HarmonizedCalendarServiceImpl implements HarmonizedCalendarService 
     public HarmonizedCalendar createCalendar(HarmonizedCalendar calendar) {
         calendar.setCalendarId(System.currentTimeMillis());
         calendar.setIsActive(true);
-        calendar.setCreatedAt(java.time.LocalDateTime.now());
-        calendar.setUpdatedAt(java.time.LocalDateTime.now());
         return calendarRepository.save(calendar);
     }
     
@@ -43,7 +41,6 @@ public class HarmonizedCalendarServiceImpl implements HarmonizedCalendarService 
             calendar.setEffectiveTo(calendarDetails.getEffectiveTo());
             calendar.setPriority(calendarDetails.getPriority());
             calendar.setIsActive(calendarDetails.getIsActive());
-            calendar.setUpdatedAt(java.time.LocalDateTime.now());
             return calendarRepository.save(calendar);
         }
         return null;
