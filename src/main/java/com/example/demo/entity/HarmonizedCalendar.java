@@ -35,37 +35,84 @@ public class HarmonizedCalendar {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
     
-    public Long getCalendarId() { return calendarId; }
-    public void setCalendarId(Long calendarId) { this.calendarId = calendarId; }
+    public Long getCalendarId() {
+        return calendarId;
+    }
     
-    public String getCalendarName() { return calendarName; }
-    public void setCalendarName(String calendarName) { this.calendarName = calendarName; }
+    public void setCalendarId(Long calendarId) {
+        this.calendarId = calendarId;
+    }
     
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public String getCalendarName() {
+        return calendarName;
+    }
     
-    public LocalDateTime getEffectiveFrom() { return effectiveFrom; }
-    public void setEffectiveFrom(LocalDateTime effectiveFrom) { this.effectiveFrom = effectiveFrom; }
+    public void setCalendarName(String calendarName) {
+        this.calendarName = calendarName;
+    }
     
-    public LocalDateTime getEffectiveTo() { return effectiveTo; }
-    public void setEffectiveTo(LocalDateTime effectiveTo) { this.effectiveTo = effectiveTo; }
+    public String getDescription() {
+        return description;
+    }
     
-    public Integer getPriority() { return priority; }
-    public void setPriority(Integer priority) { this.priority = priority; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
     
-    public Boolean getIsActive() { return isActive; }
-    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+    public LocalDateTime getEffectiveFrom() {
+        return effectiveFrom;
+    }
     
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public void setEffectiveFrom(LocalDateTime effectiveFrom) {
+        this.effectiveFrom = effectiveFrom;
+    }
     
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+    public LocalDateTime getEffectiveTo() {
+        return effectiveTo;
+    }
+    
+    public void setEffectiveTo(LocalDateTime effectiveTo) {
+        this.effectiveTo = effectiveTo;
+    }
+    
+    public Integer getPriority() {
+        return priority;
+    }
+    
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+    
+    public Boolean getIsActive() {
+        return isActive;
+    }
+    
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
+    
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+    
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+    
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+    
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
     
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
-        if (isActive == null) isActive = true;
+        if (isActive == null) {
+            isActive = true;
+        }
     }
     
     @PreUpdate
