@@ -10,51 +10,92 @@ public class ClashRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(name = "event_id_1", nullable = false)
+    @Column(name = "event_id1")
     private Long eventId1;
     
-    @Column(name = "event_id_2", nullable = false)
+    @Column(name = "event_id2")
     private Long eventId2;
     
-    @Column(name = "description", columnDefinition = "TEXT")
-    private String description;
+    @Column(name = "clash_type")
+    private String clashType;
     
-    @Column(name = "resolution_notes", columnDefinition = "TEXT") // Changed column name
-    private String resolutionNotes; // Changed field name
+    @Column(name = "severity")
+    private String severity;
     
-    @Column(name = "status")
-    private String status;
+    @Column(name = "detected_at")
+    private LocalDateTime detectedAt;
     
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-    
+    // 添加这两个字段
     @Column(name = "resolved")
     private boolean resolved = false;
     
-    // Constructors (update them)
-    public ClashRecord() {}
+    @Column(name = "resolution")
+    private String resolution;
     
-    public ClashRecord(Long eventId1, Long eventId2, String description,
-                      String resolutionNotes, String status) { // Updated parameter
+    // 构造器、getter、setter 方法
+    
+    public Long getId() {
+        return id;
+    }
+    
+    public void setId(Long id) {
+        this.id = id;
+    }
+    
+    public Long getEventId1() {
+        return eventId1;
+    }
+    
+    public void setEventId1(Long eventId1) {
         this.eventId1 = eventId1;
+    }
+    
+    public Long getEventId2() {
+        return eventId2;
+    }
+    
+    public void setEventId2(Long eventId2) {
         this.eventId2 = eventId2;
-        this.description = description;
-        this.resolutionNotes = resolutionNotes; // Updated
-        this.status = status;
     }
     
-    // Getters and setters (add/update)
-    public String getResolutionNotes() {
-        return resolutionNotes;
+    public String getClashType() {
+        return clashType;
     }
     
-    public void setResolutionNotes(String resolutionNotes) {
-        this.resolutionNotes = resolutionNotes;
+    public void setClashType(String clashType) {
+        this.clashType = clashType;
     }
     
-    // Remove old resolution getter/setter or keep for compatibility
-    // public String getResolution() { return resolutionNotes; }
-    // public void setResolution(String resolution) { this.resolutionNotes = resolution; }
+    public String getSeverity() {
+        return severity;
+    }
     
-    // ... rest of your existing code
+    public void setSeverity(String severity) {
+        this.severity = severity;
+    }
+    
+    public LocalDateTime getDetectedAt() {
+        return detectedAt;
+    }
+    
+    public void setDetectedAt(LocalDateTime detectedAt) {
+        this.detectedAt = detectedAt;
+    }
+    
+    // 添加缺少的 getter 和 setter 方法
+    public boolean isResolved() {
+        return resolved;
+    }
+    
+    public void setResolved(boolean resolved) {
+        this.resolved = resolved;
+    }
+    
+    public String getResolution() {
+        return resolution;
+    }
+    
+    public void setResolution(String resolution) {
+        this.resolution = resolution;
+    }
 }
