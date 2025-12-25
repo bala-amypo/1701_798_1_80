@@ -35,7 +35,9 @@ public class UserAccountServiceImpl implements UserAccountService {
         if (user != null) {
             user.setUsername(userDetails.getUsername());
             user.setEmail(userDetails.getEmail());
-            user.setPasswordHash(userDetails.getPasswordHash());
+            user.setPassword(userDetails.getPassword());
+            user.setFirstName(userDetails.getFirstName());
+            user.setLastName(userDetails.getLastName());
             user.setRole(userDetails.getRole());
             user.setBranchId(userDetails.getBranchId());
             user.setActive(userDetails.isActive());

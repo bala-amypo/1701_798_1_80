@@ -18,8 +18,14 @@ public class UserAccount {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
     
-    @Column(name = "password_hash")
-    private String passwordHash;
+    @Column(name = "password")
+    private String password;
+    
+    @Column(name = "first_name")
+    private String firstName;
+    
+    @Column(name = "last_name")
+    private String lastName;
     
     @Column(name = "role")
     private String role;
@@ -28,7 +34,7 @@ public class UserAccount {
     private Long branchId;
     
     @Column(name = "is_active")
-    private boolean active;
+    private boolean active = true;
     
     @Column(name = "created_at")
     private java.time.LocalDateTime createdAt;
@@ -40,7 +46,6 @@ public class UserAccount {
     protected void onCreate() {
         createdAt = java.time.LocalDateTime.now();
         updatedAt = java.time.LocalDateTime.now();
-        active = true;
     }
     
     @PreUpdate
