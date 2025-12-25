@@ -1,50 +1,71 @@
 package com.example.demo.Controller;
 
-import com.example.demo.entity.HarmonizedCalendar;
-import com.example.demo.service.HarmonizedCalendarService;
-import org.springframework.format.annotation.DateTimeFormat;
+import com.example.demo.dto.JwtResponse;
+import com.example.demo.dto.LoginRequest;
+import com.example.demo.dto.RegisterRequest;
+import com.example.demo.entity.UserAccount;
+import com.example.demo.security.JwtUtil;
+import com.example.demo.service.UserAccountService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/harmonized-calendars")
-public class HarmonizedCalendarController {
+@RequestMapping("/auth")
+public class UserAccountController {
     
-    private final HarmonizedCalendarService calendarService;
+    private final JwtUtil jwtUtil;
+    private final UserAccountService userService;
+    private final PasswordEncoder passwordEncoder;
     
-    public HarmonizedCalendarController(HarmonizedCalendarService calendarService) {
-        this.calendarService = calendarService;
+    public UserAccountController(JwtUtil jwtUtil,
+                                UserAccountService userService,
+                                PasswordEncoder passwordEncoder) {
+        this.jwtUtil = jwtUtil;
+        this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
     
-    @PostMapping("/generate")
-    public ResponseEntity<HarmonizedCalendar> generateHarmonizedCalendar(
-            @RequestParam String title,
-            @RequestParam String generatedBy) {
-        HarmonizedCalendar calendar = calendarService.generateHarmonizedCalendar(title, generatedBy);
-        return ResponseEntity.status(HttpStatus.CREATED).body(calendar);
+    @PostMapping("/register")
+    public ResponseEntity<UserAccount> register(@RequestBody RegisterRequest registerRequest) {
+        UserAccount user = new UserAccount(
+            registerRequest.getName(),
+            registerRequest.getEmail(),
+            registerRequest.getPassword(),
+            registerRequest.getRole(),
+            registerRequest.getDepartment()
+        );
+        
+        UserAccount registeredUser = userService.register(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
     }
     
-    @GetMapping("/{id}")
-    public ResponseEntity<HarmonizedCalendar> getCalendarById(@PathVariable Long id) {
-        HarmonizedCalendar calendar = calendarService.getCalendarById(id);
-        return ResponseEntity.ok(calendar);
+    @PostMapping("/login")
+    public ResponseEntity<JwtResponse> login(@RequestBody LoginRequest loginRequest) {
+        UserAccount user = userService.findByEmail(loginRequest.getEmail());
+        
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Invalid credentials");
+        }
+        
+        String jwt = jwtUtil.generateToken(user.getEmail(), user.getRole(), user.getFullName());
+        
+        JwtResponse response = new JwtResponse(jwt, user.getEmail(), user.getRole(), user.getFullName());
+        return ResponseEntity.ok(response);
     }
     
-    @GetMapping
-    public ResponseEntity<List<HarmonizedCalendar>> getAllCalendars() {
-        List<HarmonizedCalendar> calendars = calendarService.getAllCalendars();
-        return ResponseEntity.ok(calendars);
+    @GetMapping("/users")
+    public ResponseEntity<List<UserAccount>> getAllUsers() {
+        List<UserAccount> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
     }
     
-    @GetMapping("/range")
-    public ResponseEntity<List<HarmonizedCalendar>> getCalendarsWithinRange(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
-        List<HarmonizedCalendar> calendars = calendarService.getCalendarsWithinRange(start, end);
-        return ResponseEntity.ok(calendars);
+    @GetMapping("/users/{id}")
+    public ResponseEntity<UserAccount> getUserById(@PathVariable Long id) {
+        UserAccount user = userService.getUser(id);
+        return ResponseEntity.ok(user);
     }
 }
