@@ -20,9 +20,13 @@ public class UserAccount {
     @Column(nullable = false)
     private String email;
     
-    // ADD THIS PROPERTY IF IT DOESN'T EXIST:
+    // Make sure you have this property (or similar)
     @Column(name = "is_active")
-    private Boolean active = true;  // or use 'private boolean active = true;'
+    private Boolean active = true;
+    
+    // Add other properties that your service classes need:
+    private String role;           // For findByRole method
+    private Long branchId;         // For findByBranchId method
     
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -30,78 +34,33 @@ public class UserAccount {
     // Constructors
     public UserAccount() {}
     
-    public UserAccount(String username, String password, String email) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.active = true;
-        this.createdAt = LocalDateTime.now();
-    }
+    // Getters and Setters - MAKE SURE YOU HAVE THESE:
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
     
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
     
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
     
-    public String getUsername() {
-        return username;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
     
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    public Boolean getActive() { return active; }  // IMPORTANT: getActive() not getIsActive()
+    public void setActive(Boolean active) { this.active = active; }
     
-    public String getPassword() {
-        return password;
-    }
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
     
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public Long getBranchId() { return branchId; }
+    public void setBranchId(Long branchId) { this.branchId = branchId; }
     
-    public String getEmail() {
-        return email;
-    }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     
-    public void setEmail(String email) {
-        this.email = email;
-    }
-    
-    // CRITICAL: Add this getter (use either option based on your property type)
-    
-    // If you use 'private Boolean active;'
-    public Boolean getActive() {
-        return active;
-    }
-    
-    // If you use 'private boolean active;' (primitive type)
-    // public boolean isActive() {
-    //     return active;
-    // }
-    
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-    
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-    
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-    
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-    
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
     
     @PrePersist
     protected void onCreate() {

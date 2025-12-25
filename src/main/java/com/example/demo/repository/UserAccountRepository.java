@@ -12,19 +12,29 @@ import java.util.Optional;
 @Repository
 public interface UserAccountRepository extends JpaRepository<UserAccount, Long> {
     
-    // FIX 1: Use the correct property name (most common solution)
-    // If your entity has property 'active', use:
+    // FIX 1: Remove or fix the findByIsActive method
+    // Option A: Remove it completely if you don't need it
+    // Option B: Change it to match your UserAccount entity property
+    
+    // If your UserAccount entity has property named 'active' (without 'is' prefix):
     List<UserAccount> findByActive(Boolean active);
     
-    // FIX 2: Or use a custom query if you prefer to keep the method name:
+    // OR if your UserAccount entity has property named 'status':
+    // List<UserAccount> findByStatus(String status);
+    
+    // OR if you need to keep the method name 'findByIsActive', use @Query:
     /*
     @Query("SELECT u FROM UserAccount u WHERE u.active = :isActive")
     List<UserAccount> findByIsActive(@Param("isActive") Boolean isActive);
     */
     
-    // Other repository methods you might have:
+    // Other repository methods that should exist:
     Optional<UserAccount> findByUsername(String username);
     Optional<UserAccount> findByEmail(String email);
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
-}
+    
+    // If your code references these methods, add them:
+    List<UserAccount> findByRole(String role);  // If UserAccount has 'role' property
+    List<UserAccount> findByBranchId(Long branchId);  // If UserAccount has 'branchId' property
+}   
