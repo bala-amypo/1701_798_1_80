@@ -8,54 +8,42 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/clashes")
+@RequestMapping("/api/clash-records")
 public class ClashRecordController {
     
     @Autowired
-    private ClashDetectionService clashService;
-    
-    @PostMapping("/detect")
-    public ResponseEntity<ClashRecord> detectClash(
-            @RequestParam Long eventId1,
-            @RequestParam Long eventId2,
-            @RequestParam String clashType,
-            @RequestParam String severity) {
-        ClashRecord clashRecord = clashService.detectClash(eventId1, eventId2, clashType, severity);
-        return ResponseEntity.ok(clashRecord);
-    }
-    
-    @PutMapping("/resolve/{clashId}")
-    public ResponseEntity<ClashRecord> resolveClash(
-            @PathVariable Long clashId,
-            @RequestParam String resolution) {
-        ClashRecord resolvedClash = clashService.resolveClash(clashId, resolution);
-        if (resolvedClash != null) {
-            return ResponseEntity.ok(resolvedClash);
-        }
-        return ResponseEntity.notFound().build();
-    }
-    
-    @GetMapping("/event/{eventId}")
-    public ResponseEntity<List<ClashRecord>> getClashesByEvent(@PathVariable Long eventId) {
-        List<ClashRecord> clashes = clashService.getClashesByEvent(eventId);
-        return ResponseEntity.ok(clashes);
-    }
+    private ClashDetectionService clashDetectionService;
     
     @GetMapping
-    public ResponseEntity<List<ClashRecord>> getAllClashes() {
-        List<ClashRecord> clashes = clashService.getAllClashes();
-        return ResponseEntity.ok(clashes);
+    public ResponseEntity<List<ClashRecord>> getAllClashRecords() {
+        return ResponseEntity.ok(clashDetectionService.getAllClashRecords());
     }
     
-    @GetMapping("/unresolved")
-    public ResponseEntity<List<ClashRecord>> getUnresolvedClashes() {
-        List<ClashRecord> unresolvedClashes = clashService.getUnresolvedClashes();
-        return ResponseEntity.ok(unresolvedClashes);
+    @GetMapping("/{id}")
+    public ResponseEntity<ClashRecord> getClashRecordById(@PathVariable Long id) {
+        return ResponseEntity.ok(clashDetectionService.getClashRecordById(id));
     }
     
-    @GetMapping("/type/{clashType}")
-    public ResponseEntity<List<ClashRecord>> getClashesByType(@PathVariable String clashType) {
-        List<ClashRecord> clashes = clashService.getClashesByType(clashType);
-        return ResponseEntity.ok(clashes);
+    @PostMapping("/detect")
+    public ResponseEntity<List<ClashRecord>> detectClashes() {
+        return ResponseEntity.ok(clashDetectionService.detectClashes());
+    }
+    
+    @PostMapping
+    public ResponseEntity<ClashRecord> createClashRecord(@RequestBody ClashRecord clashRecord) {
+        return ResponseEntity.ok(clashDetectionService.saveClashRecord(clashRecord));
+    }
+    
+    @PutMapping("/{id}/status")
+    public ResponseEntity<ClashRecord> updateClashRecordStatus(
+            @PathVariable Long id,
+            @RequestParam String status) {
+        return ResponseEntity.ok(clashDetectionService.updateClashRecordStatus(id, status));
+    }
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteClashRecord(@PathVariable Long id) {
+        clashDetectionService.deleteClashRecord(id);
+        return ResponseEntity.noContent().build();
     }
 }

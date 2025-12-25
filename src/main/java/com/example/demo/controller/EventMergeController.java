@@ -5,35 +5,29 @@ import com.example.demo.service.EventMergeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/merge")
+@RequestMapping("/api/event-merge")
 public class EventMergeController {
     
     @Autowired
-    private EventMergeService mergeService;
+    private EventMergeService eventMergeService;
     
-    @PostMapping("/merge-events")
-    public ResponseEntity<List<HarmonizedCalendar>> mergeEvents() {
-        List<HarmonizedCalendar> mergedCalendars = mergeService.mergeEvents();
-        return ResponseEntity.ok(mergedCalendars);
+    @PostMapping("/merge-all")
+    public ResponseEntity<List<HarmonizedCalendar>> mergeAllCalendars() {
+        return ResponseEntity.ok(eventMergeService.mergeAllCalendars());
     }
     
-    @PostMapping("/merge-by-date")
-    public ResponseEntity<List<HarmonizedCalendar>> mergeEventsByDateRange(
-            @RequestParam LocalDate startDate,
-            @RequestParam LocalDate endDate) {
-        List<HarmonizedCalendar> mergedCalendars = mergeService.mergeEventsByDateRange(startDate, endDate);
-        return ResponseEntity.ok(mergedCalendars);
+    @PostMapping("/merge/{eventId}")
+    public ResponseEntity<HarmonizedCalendar> mergeEvent(
+            @PathVariable Long eventId,
+            @RequestParam String sourceType) {
+        return ResponseEntity.ok(eventMergeService.mergeEvent(eventId, sourceType));
     }
     
-    @GetMapping("/records")
-    public ResponseEntity<List<HarmonizedCalendar>> getMergeRecordsByDate(
-            @RequestParam LocalDate startDate,
-            @RequestParam LocalDate endDate) {
-        List<HarmonizedCalendar> records = mergeService.getMergeRecordsByDate(startDate, endDate);
-        return ResponseEntity.ok(records);
+    @GetMapping("/merged-events")
+    public ResponseEntity<List<HarmonizedCalendar>> getMergedEvents() {
+        return ResponseEntity.ok(eventMergeService.getMergedEvents());
     }
 }

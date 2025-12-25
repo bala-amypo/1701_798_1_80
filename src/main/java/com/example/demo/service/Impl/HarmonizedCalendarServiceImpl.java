@@ -5,73 +5,61 @@ import com.example.demo.repository.HarmonizedCalendarRepository;
 import com.example.demo.service.HarmonizedCalendarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class HarmonizedCalendarServiceImpl implements HarmonizedCalendarService {
     
     @Autowired
-    private HarmonizedCalendarRepository calendarRepository;
+    private HarmonizedCalendarRepository harmonizedCalendarRepository;
     
     @Override
-    public HarmonizedCalendar createCalendar(HarmonizedCalendar calendar) {
-        calendar.setCalendarId(System.currentTimeMillis());
-        calendar.setIsActive(true);
-        return calendarRepository.save(calendar);
+    public List<HarmonizedCalendar> getAllHarmonizedCalendars() {
+        return harmonizedCalendarRepository.findAll();
     }
     
     @Override
-    public HarmonizedCalendar getCalendarById(Long id) {
-        return calendarRepository.findById(id).orElse(null);
+    public Optional<HarmonizedCalendar> getHarmonizedCalendarById(Long id) {
+        return harmonizedCalendarRepository.findById(id);
     }
     
     @Override
-    public List<HarmonizedCalendar> getAllCalendars() {
-        return calendarRepository.findAll();
+    public HarmonizedCalendar saveHarmonizedCalendar(HarmonizedCalendar harmonizedCalendar) {
+        return harmonizedCalendarRepository.save(harmonizedCalendar);
     }
     
     @Override
-    public HarmonizedCalendar updateCalendar(Long id, HarmonizedCalendar calendarDetails) {
-        HarmonizedCalendar calendar = calendarRepository.findById(id).orElse(null);
-        if (calendar != null) {
-            calendar.setCalendarName(calendarDetails.getCalendarName());
-            calendar.setDescription(calendarDetails.getDescription());
-            calendar.setEffectiveFrom(calendarDetails.getEffectiveFrom());
-            calendar.setEffectiveTo(calendarDetails.getEffectiveTo());
-            calendar.setPriority(calendarDetails.getPriority());
-            calendar.setIsActive(calendarDetails.getIsActive());
-            return calendarRepository.save(calendar);
+    public HarmonizedCalendar updateHarmonizedCalendar(Long id, HarmonizedCalendar harmonizedCalendar) {
+        if (harmonizedCalendarRepository.existsById(id)) {
+            harmonizedCalendar.setId(id);
+            return harmonizedCalendarRepository.save(harmonizedCalendar);
         }
         return null;
     }
     
     @Override
-    public boolean deleteCalendar(Long id) {
-        if (calendarRepository.existsById(id)) {
-            calendarRepository.deleteById(id);
-            return true;
-        }
-        return false;
+    public void deleteHarmonizedCalendar(Long id) {
+        harmonizedCalendarRepository.deleteById(id);
     }
     
     @Override
-    public List<HarmonizedCalendar> getCalendarsByDateRange(LocalDate startDate, LocalDate endDate) {
-        return calendarRepository.findByEffectiveFromBetween(startDate, endDate);
+    public List<HarmonizedCalendar> getEventsByDateRange(String startDate, String endDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        LocalDateTime start = LocalDateTime.parse(startDate, formatter);
+        LocalDateTime end = LocalDateTime.parse(endDate, formatter);
+        return harmonizedCalendarRepository.findByStartTimeBetween(start, end);
     }
     
     @Override
-    public List<HarmonizedCalendar> searchCalendarsByName(String name) {
-        return calendarRepository.findByCalendarNameContaining(name);
+    public List<HarmonizedCalendar> getEventsBySource(String sourceSystem) {
+        return harmonizedCalendarRepository.findBySourceSystem(sourceSystem);
     }
     
     @Override
-    public List<HarmonizedCalendar> getActiveCalendars() {
-        return calendarRepository.findByIsActive(true);
-    }
-    
-    @Override
-    public List<HarmonizedCalendar> getCalendarsByPriority(Integer priority) {
-        return calendarRepository.findByPriority(priority);
+    public List<HarmonizedCalendar> getEventsByType(String eventType) {
+        return harmonizedCalendarRepository.findByEventType(eventType);
     }
 }
