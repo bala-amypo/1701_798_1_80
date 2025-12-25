@@ -32,8 +32,9 @@ public class UserAccount {
     @Column(name = "branch_id")
     private Long branchId;
     
+    // Add column annotation with exact name
     @Column(name = "is_active")
-    private Boolean isActive = true;
+    private Boolean active = true;
     
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -65,8 +66,9 @@ public class UserAccount {
     public Long getBranchId() { return branchId; }
     public void setBranchId(Long branchId) { this.branchId = branchId; }
     
-    public Boolean getIsActive() { return isActive; }
-    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+    // Change getter/setter names to match field name 'active'
+    public Boolean getActive() { return active; }
+    public void setActive(Boolean active) { this.active = active; }
     
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
