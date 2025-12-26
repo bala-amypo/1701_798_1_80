@@ -10,8 +10,8 @@ import java.util.List;
 @Repository
 public interface ClashRecordRepository extends JpaRepository<ClashRecord, Long> {
     
-    @Query("SELECT c FROM ClashRecord c WHERE c.eventAId = :eventId OR c.eventBId = :eventId")
-    List<ClashRecord> findByEventAIdOrEventBId(@Param("eventId") Long eventId);
+    @Query("SELECT c FROM ClashRecord c WHERE c.eventAId = :eventAId OR c.eventBId = :eventBId")
+    List<ClashRecord> findByEventAIdOrEventBId(@Param("eventAId") Long eventAId, @Param("eventBId") Long eventBId);
     
     List<ClashRecord> findByResolvedFalse();
 }
