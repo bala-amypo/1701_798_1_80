@@ -1,21 +1,22 @@
 package com.example.demo.entity;
 
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
+@Entity
+@Getter
+@Setter
 public class EventMergeRecord {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String sourceEventIds;
     private String mergedTitle;
     private LocalDate mergedStartDate;
     private LocalDate mergedEndDate;
     private String mergeReason;
-    private LocalDateTime createdAt;
-
-    public void prePersist() {
-        if (createdAt == null) createdAt = LocalDateTime.now();
-    }
-
-    // constructor, getters, setters
 }

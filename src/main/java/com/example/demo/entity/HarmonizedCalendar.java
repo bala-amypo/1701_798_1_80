@@ -1,21 +1,22 @@
 package com.example.demo.entity;
 
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
+@Entity
+@Getter
+@Setter
 public class HarmonizedCalendar {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String title;
     private String generatedBy;
-    private LocalDateTime generatedAt;
     private LocalDate effectiveFrom;
     private LocalDate effectiveTo;
     private String eventsJson;
-
-    public void prePersist() {
-        if (generatedAt == null) generatedAt = LocalDateTime.now();
-    }
-
-    // constructor, getters, setters
 }

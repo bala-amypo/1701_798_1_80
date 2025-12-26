@@ -17,6 +17,4 @@ public class AcademicEvent {
     private String title;
     private LocalDate startDate;
     private LocalDate endDate;
-
-    // Matches getStartDate(), getEndDate(), getTitle() called in service/test
 }
