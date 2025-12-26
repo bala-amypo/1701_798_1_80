@@ -9,7 +9,7 @@ import java.io.IOException;
 @WebServlet("/status")
 public class SimpleStatusServlet extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setStatus(200);
         response.getWriter().write("Servlet Alive");
     }

@@ -36,15 +36,15 @@ public class JwtUtil {
     }
 
     public String extractUsername(String token) {
-        return parseToken(token).getPayload().getSubject();
+        return parseToken(token).getBody().getSubject();
     }
 
     public String extractRole(String token) {
-        return (String) parseToken(token).getPayload().get("role");
+        return (String) parseToken(token).getBody().get("role");
     }
 
     public Long extractUserId(String token) {
-        Object userId = parseToken(token).getPayload().get("userId");
+        Object userId = parseToken(token).getBody().get("userId");
         return userId instanceof Integer ? ((Integer) userId).longValue() : (Long) userId;
     }
 
@@ -57,7 +57,7 @@ public class JwtUtil {
     }
 
     private boolean isTokenExpired(String token) {
-        return parseToken(token).getPayload().getExpiration().before(new Date());
+        return parseToken(token).getBody().getExpiration().before(new Date());
     }
 
     public Jws<Claims> parseToken(String token) {
