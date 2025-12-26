@@ -71,7 +71,7 @@
 				<version>2.0.4</version>
 			</dependency>
 		</dependencies>
-		<build>
+		<!-- <build>
 			<plugins>
 				<plugin>
 					<groupId>org.springframework.boot</groupId>
@@ -96,4 +96,4 @@
 				</plugin>
 			</plugins>
 		</build>
-	</project>
+	</project> -->
