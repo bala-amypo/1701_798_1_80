@@ -69,6 +69,7 @@ public class UserAccountController {
         UserAccount user = userAccountService.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         
+        // Use the new generateTokenForUser method
         String token = jwtUtil.generateTokenForUser(user);
         
         Map<String, Object> response = new HashMap<>();
