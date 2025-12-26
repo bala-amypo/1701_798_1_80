@@ -1,16 +1,18 @@
 package com.example.demo.servlet;
 
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
-@WebServlet(urlPatterns = "/simple-status")
 public class SimpleStatusServlet extends HttpServlet {
-
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
-        resp.setStatus(200);
-        resp.getWriter().write("Servlet Alive");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setStatus(200);
+        response.setContentType("text/plain");
+        PrintWriter out = response.getWriter();
+        out.write("Servlet Alive");
+        out.flush();
     }
 }

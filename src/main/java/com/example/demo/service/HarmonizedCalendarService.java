@@ -1,8 +1,10 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.HarmonizedCalendar;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface HarmonizedCalendarService {
-    List<HarmonizedCalendar> findAll();
+    HarmonizedCalendar generateHarmonizedCalendar(String title, String generatedBy);
+    List<HarmonizedCalendar> getCalendarsWithinRange(LocalDate dateFrom, LocalDate dateTo);
 }
