@@ -16,9 +16,16 @@ import java.util.function.Function;
 public class JwtUtil {
     private SecretKey secretKey;
     private static final long EXPIRATION_TIME = 86400000; // 24 hours
+    
+    // Constructor to initialize key
+    public JwtUtil() {
+        initKey();
+    }
 
     public void initKey() {
-        this.secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+        if (this.secretKey == null) {
+            this.secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+        }
     }
 
     public String generateToken(Map<String, Object> claims, String subject) {
@@ -27,7 +34,7 @@ public class JwtUtil {
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(secretKey)
+                .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -65,8 +72,12 @@ public class JwtUtil {
     }
 
     public boolean isTokenValid(String token, String username) {
-        final String extractedUsername = extractUsername(token);
-        return (extractedUsername.equals(username) && !isTokenExpired(token));
+        try {
+            final String extractedUsername = extractUsername(token);
+            return (extractedUsername.equals(username) && !isTokenExpired(token));
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private boolean isTokenExpired(String token) {
@@ -79,13 +90,9 @@ public class JwtUtil {
 
     public Claims parseToken(String token) {
         try {
-            return Jwts.parserBuilder()
-                    .setSigningKey(secretKey)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
+            return extractAllClaims(token);
         } catch (Exception e) {
-            throw new RuntimeException("Invalid JWT token", e);
+            throw new RuntimeException("Invalid JWT token: " + e.getMessage(), e);
         }
     }
-}
+}   
