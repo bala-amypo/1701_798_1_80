@@ -7,6 +7,7 @@ import com.example.demo.service.HarmonizedCalendarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class HarmonizedCalendarServiceImpl implements HarmonizedCalendarService 
         calendar.setGeneratedBy(generatedBy);
         calendar.setEffectiveFrom(LocalDate.now());
         calendar.setEffectiveTo(LocalDate.now().plusMonths(3));
-        calendar.setEventsJson("[]"); // Empty JSON array for now
+        calendar.setEventsJson("[]");
         
         return harmonizedCalendarRepository.save(calendar);
     }
