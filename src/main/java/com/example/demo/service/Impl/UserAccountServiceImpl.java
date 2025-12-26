@@ -1,26 +1,44 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.AcademicEvent;
-import com.example.demo.repository.AcademicEventRepository;
-import com.example.demo.service.AcademicEventService;
+import com.example.demo.entity.UserAccount;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.exception.ValidationException;
+import com.example.demo.repository.UserAccountRepository;
+import com.example.demo.service.UserAccountService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class AcademicEventServiceImpl implements AcademicEventService {
+public class UserAccountServiceImpl implements UserAccountService {
+    
+    @Autowired
+    private UserAccountRepository userAccountRepository;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-    private final AcademicEventRepository repository;
-
-    public AcademicEventServiceImpl(AcademicEventRepository repository) {
-        this.repository = repository;
+    @Override
+    public UserAccount register(UserAccount user) {
+        if (userAccountRepository.existsByEmail(user.getEmail())) {
+            throw new ValidationException("Email already in use");
+        }
+        
+        if (user.getPassword() == null || user.getPassword().length() < 8) {
+            throw new ValidationException("Password must be at least 8 characters");
+        }
+        
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (user.getRole() == null) {
+            user.setRole("REVIEWER");
+        }
+        
+        return userAccountRepository.save(user);
     }
 
-    public AcademicEvent save(AcademicEvent event) {
-        return repository.save(event);
-    }
-
-    public List<AcademicEvent> findAll() {
-        return repository.findAll();
+    @Override
+    public UserAccount getUser(Long id) {
+        return userAccountRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
     }
 }

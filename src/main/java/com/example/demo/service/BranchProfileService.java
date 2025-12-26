@@ -4,6 +4,7 @@ import com.example.demo.entity.BranchProfile;
 import java.util.List;
 
 public interface BranchProfileService {
-    BranchProfile save(BranchProfile branch);
-    List<BranchProfile> findAll();
+    BranchProfile createBranch(BranchProfile branch);
+    BranchProfile updateBranchStatus(Long id, Boolean active);
+    List<BranchProfile> getAllBranches();
 }

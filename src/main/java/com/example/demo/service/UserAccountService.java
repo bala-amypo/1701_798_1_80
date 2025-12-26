@@ -3,5 +3,6 @@ package com.example.demo.service;
 import com.example.demo.entity.UserAccount;
 
 public interface UserAccountService {
-    UserAccount save(UserAccount user);
+    UserAccount register(UserAccount user);
+    UserAccount getUser(Long id);
 }
