@@ -109,11 +109,11 @@ package com.example.demo.security;
 
 import com.example.demo.entity.UserAccount;
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -128,13 +128,11 @@ public class JwtUtil {
     @Value("${jwt.expiration:86400000}")
     private long expiration;
     
-    private Key signingKey;
+    private Key key;
     
-    @javax.annotation.PostConstruct
+    @PostConstruct
     public void initKey() {
-        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(
-                DatatypeConverter.printBase64Binary(secret.getBytes()));
-        signingKey = new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS256.getJcaName());
+        this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
     
     public String generateToken(Map<String, Object> claims, String subject) {
@@ -143,7 +141,7 @@ public class JwtUtil {
                 .setSubject(subject)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(SignatureAlgorithm.HS256, signingKey)
+                .signWith(key)
                 .compact();
     }
     
@@ -158,26 +156,46 @@ public class JwtUtil {
         return generateToken(claims, user.getEmail());
     }
     
-    public Jws<Claims> parseToken(String token) {
+    // Create a wrapper class that provides getPayload() for the test
+    public JwtWrapper parseToken(String token) {
         try {
-            return Jwts.parser()
-                    .setSigningKey(signingKey)
+            Jws<Claims> jws = Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
                     .parseClaimsJws(token);
+            return new JwtWrapper(jws);
         } catch (JwtException e) {
             throw new RuntimeException("Invalid JWT token: " + e.getMessage(), e);
         }
     }
     
+    // Wrapper class that provides getPayload() method for tests
+    public static class JwtWrapper {
+        private final Jws<Claims> jws;
+        
+        public JwtWrapper(Jws<Claims> jws) {
+            this.jws = jws;
+        }
+        
+        public Claims getPayload() {
+            return jws.getBody();
+        }
+        
+        public Jws<Claims> getJws() {
+            return jws;
+        }
+    }
+    
     public String extractUsername(String token) {
-        return parseToken(token).getBody().getSubject();
+        return parseToken(token).getPayload().getSubject();
     }
     
     public Long extractUserId(String token) {
-        return parseToken(token).getBody().get("userId", Long.class);
+        return parseToken(token).getPayload().get("userId", Long.class);
     }
     
     public String extractRole(String token) {
-        return parseToken(token).getBody().get("role", String.class);
+        return parseToken(token).getPayload().get("role", String.class);
     }
     
     public boolean isTokenValid(String token, String username) {
@@ -190,6 +208,6 @@ public class JwtUtil {
     }
     
     private boolean isTokenExpired(String token) {
-        return parseToken(token).getBody().getExpiration().before(new Date());
+        return parseToken(token).getPayload().getExpiration().before(new Date());
     }
 }

@@ -7,7 +7,6 @@ import com.example.demo.service.ClashDetectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Service
@@ -28,7 +27,7 @@ public class ClashDetectionServiceImpl implements ClashDetectionService {
     
     @Override
     public List<ClashRecord> getClashesForEvent(Long eventId) {
-        return clashRecordRepository.findByEventAIdOrEventBId(eventId);
+        return clashRecordRepository.findByEventAIdOrEventBId(eventId, eventId);
     }
     
     @Override
