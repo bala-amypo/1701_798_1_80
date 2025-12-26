@@ -18,6 +18,8 @@
 //     private LocalDate startDate;
 //     private LocalDate endDate;
 // }
+
+package com.example.demo.entity;
 @Entity
 public class AcademicEvent {
 

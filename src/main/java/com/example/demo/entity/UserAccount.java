@@ -23,6 +23,9 @@
 //         // Optional: Can leave empty or initialize default values
 //     }
 // }
+
+package com.example.demo.entity;
+
 @Entity
 public class UserAccount {
 
