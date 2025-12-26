@@ -2,6 +2,7 @@ package com.example.demo.security;
 
 import com.example.demo.entity.UserAccount;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -29,19 +30,20 @@ public class JwtUtil {
     @PostConstruct
     public void initKey() {
         // Ensure we have a valid 256-bit key (32 characters)
-        if (secret.length() < 32) {
+        String secretKey = secret;
+        if (secretKey.length() < 32) {
             // Pad with zeros to reach 32 characters
-            StringBuilder padded = new StringBuilder(secret);
+            StringBuilder padded = new StringBuilder(secretKey);
             while (padded.length() < 32) {
                 padded.append("0");
             }
-            secret = padded.toString();
-        } else if (secret.length() > 32) {
+            secretKey = padded.toString();
+        } else if (secretKey.length() > 32) {
             // Truncate to 32 characters
-            secret = secret.substring(0, 32);
+            secretKey = secretKey.substring(0, 32);
         }
         
-        byte[] keyBytes = Decoders.BASE64.decode(java.util.Base64.getEncoder().encodeToString(secret.getBytes()));
+        byte[] keyBytes = secretKey.getBytes();
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
     
@@ -66,28 +68,27 @@ public class JwtUtil {
         return generateToken(claims, user.getEmail());
     }
     
-    public Claims parseToken(String token) {
+    public Jws<Claims> parseToken(String token) {
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
-                    .parseClaimsJws(token)
-                    .getBody();
+                    .parseClaimsJws(token);
         } catch (JwtException e) {
-            throw new RuntimeException("Invalid JWT token", e);
+            throw new RuntimeException("Invalid JWT token: " + e.getMessage(), e);
         }
     }
     
     public String extractUsername(String token) {
-        return parseToken(token).getSubject();
+        return parseToken(token).getBody().getSubject();
     }
     
     public Long extractUserId(String token) {
-        return parseToken(token).get("userId", Long.class);
+        return parseToken(token).getBody().get("userId", Long.class);
     }
     
     public String extractRole(String token) {
-        return parseToken(token).get("role", String.class);
+        return parseToken(token).getBody().get("role", String.class);
     }
     
     public boolean isTokenValid(String token, String username) {
@@ -100,12 +101,6 @@ public class JwtUtil {
     }
     
     private boolean isTokenExpired(String token) {
-        return parseToken(token).getExpiration().before(new Date());
-    }
-    
-    // For test compatibility - this method is used in tests
-    public Object parseToken(String token, String dummy) {
-        // This method signature is for test compatibility
-        return parseToken(token);
+        return parseToken(token).getBody().getExpiration().before(new Date());
     }
 }
