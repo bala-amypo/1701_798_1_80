@@ -5,27 +5,24 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
     
-    private final JwtAuthFilter jwtAuthFilter;
-    
-    public SecurityConfig(JwtAuthFilter jwtAuthFilter) {
-        this.jwtAuthFilter = jwtAuthFilter;
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
     
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            // FIX 1: Disable CSRF for API endpoints (fixes 403 error)
+            // FIX: Disable CSRF for API endpoints (fixes 403 error)
             .csrf(csrf -> csrf.disable())
-            
-            // FIX 2: Configure CORS
-            .cors(cors -> cors.configure(http))
             
             // Configure authorization
             .authorizeHttpRequests(auth -> auth
@@ -50,10 +47,7 @@ public class SecurityConfig {
             // Configure session management
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
-            
-            // Add JWT filter
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+            );
         
         // Allow frames for H2 console (for testing)
         http.headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
