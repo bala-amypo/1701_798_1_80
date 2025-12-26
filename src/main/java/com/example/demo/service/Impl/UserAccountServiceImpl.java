@@ -1,42 +1,28 @@
-package com.example.demo.service.impl;
-
-import com.example.demo.entity.UserAccount;
-import com.example.demo.exception.ValidationException;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.UserAccountRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import java.util.Optional;
-
 @Service
-public class UserAccountServiceImpl {
+public class UserAccountServiceImpl implements UserAccountService {
 
-    private final UserAccountRepository userAccountRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final UserAccountRepository repo;
+    private final PasswordEncoder encoder;
 
-    public UserAccountServiceImpl(UserAccountRepository repo, PasswordEncoder encoder) {
-        this.userAccountRepository = repo;
-        this.passwordEncoder = encoder;
+    public UserAccountServiceImpl(UserAccountRepository repo,
+                                  PasswordEncoder encoder) {
+        this.repo = repo;
+        this.encoder = encoder;
     }
 
     public UserAccount register(UserAccount user) {
-        if (userAccountRepository.existsByEmail(user.getEmail())) {
+        if (repo.existsByEmail(user.getEmail()))
             throw new ValidationException("Email already in use");
-        }
-        if (user.getPassword() == null || user.getPassword().length() < 8) {
+
+        if (user.getPassword().length() < 8)
             throw new ValidationException("Password must be at least 8 characters");
-        }
-        if (user.getRole() == null) {
-            user.setRole("REVIEWER");
-        }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.prePersist();
-        return userAccountRepository.save(user);
+
+        user.setPassword(encoder.encode(user.getPassword()));
+        return repo.save(user);
     }
 
     public UserAccount getUser(Long id) {
-        Optional<UserAccount> opt = userAccountRepository.findById(id);
-        return opt.orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        return repo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 }
