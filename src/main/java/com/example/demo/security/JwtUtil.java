@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -23,8 +24,9 @@ public class JwtUtil {
 
     /**
      * REQUIRED by test file
-     * Must exist and initialize key
+     * Automatically initializes key at startup
      */
+    @PostConstruct
     public void initKey() {
         this.key = Keys.hmacShaKeyFor(
                 SECRET.getBytes(StandardCharsets.UTF_8)
@@ -32,9 +34,6 @@ public class JwtUtil {
     }
 
     private SecretKey getKey() {
-        if (key == null) {
-            initKey(); // safety for runtime usage
-        }
         return key;
     }
 
