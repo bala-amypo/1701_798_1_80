@@ -25,7 +25,7 @@ public class OpenApiConfig {
                                 .email("support@example.com"))
                         .license(new License()
                                 .name("Apache 2.0")
-                                .url("http://springdoc.org")))
+                                .url("https://9226.pro604cr.amypo.ai/")))
                 .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"))
                 .components(new Components()
                         .addSecuritySchemes("Bearer Authentication", createAPIKeyScheme()));
