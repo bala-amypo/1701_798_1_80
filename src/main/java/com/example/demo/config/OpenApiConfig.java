@@ -31,7 +31,7 @@ public class OpenApiConfig {
                         .addSecuritySchemes("Bearer Authentication", createAPIKeyScheme()));
     }
 
-    private SecurityScheme createAPIKeyScheme() {
+    public SecurityScheme createAPIKeyScheme() {
         return new SecurityScheme()
                 .type(SecurityScheme.Type.HTTP)
                 .bearerFormat("JWT")
