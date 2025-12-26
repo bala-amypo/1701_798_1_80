@@ -2,28 +2,32 @@ package com.example.demo.security;
 
 import com.example.demo.entity.UserAccount;
 import com.example.demo.repository.UserAccountRepository;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
-import java.util.List;
+import org.springframework.security.core.userdetails.*;
+import java.util.Collections;
+import java.util.Optional;
 
-@Service
 public class CustomUserDetailsService implements UserDetailsService {
-    private final UserAccountRepository userAccountRepository;
 
-    public CustomUserDetailsService(UserAccountRepository userAccountRepository) {
-        this.userAccountRepository = userAccountRepository;
+    private final UserAccountRepository userRepo;
+
+    public CustomUserDetailsService(UserAccountRepository userRepo) {
+        this.userRepo = userRepo;
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserAccount user = userAccountRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
-        
-        return new User(user.getEmail(), user.getPassword(), 
-                List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole())));
+        Optional<UserAccount> userOpt = userRepo.findByEmail(email);
+        if (userOpt.isEmpty()) {
+            throw new UsernameNotFoundException("User not found with email: " + email);
+        }
+        UserAccount ua = userOpt.get();
+        GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + ua.getRole());
+        return new org.springframework.security.core.userdetails.User(
+                ua.getEmail(),
+                ua.getPassword(),
+                Collections.singleton(authority)
+        );
     }
 }
