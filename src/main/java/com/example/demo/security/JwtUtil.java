@@ -6,6 +6,7 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,19 +15,31 @@ import java.util.Map;
 @Component
 public class JwtUtil {
     
-    @Value("${jwt.secret}")
+    @Value("${jwt.secret:your-256-bit-secret-key-for-jwt-generation-must-be-at-least-32-characters-long}")
     private String secret;
     
-    @Value("${jwt.expiration}")
+    @Value("${jwt.expiration:86400000}")
     private long expiration;
     
     private Key key;
     
     @PostConstruct
     public void initKey() {
-        // Use the secret directly - it's already 32+ characters from your properties
-        byte[] keyBytes = secret.getBytes();
-        this.key = Keys.hmacShaKeyFor(keyBytes);
+        // Ensure we have a valid key of at least 256 bits (32 chars)
+        String keyString = secret;
+        if (keyString.length() < 32) {
+            // Pad the key to meet minimum requirement
+            StringBuilder sb = new StringBuilder(keyString);
+            while (sb.length() < 32) {
+                sb.append("0");
+            }
+            keyString = sb.toString();
+        } else if (keyString.length() > 32) {
+            // Truncate if too long
+            keyString = keyString.substring(0, 32);
+        }
+        
+        this.key = Keys.hmacShaKeyFor(keyString.getBytes());
     }
     
     public String generateToken(Map<String, Object> claims, String subject) {
@@ -50,16 +63,28 @@ public class JwtUtil {
         return generateToken(claims, user.getEmail());
     }
     
+    public Claims parseToken(String token) {
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (JwtException e) {
+            throw new RuntimeException("Invalid JWT token: " + e.getMessage(), e);
+        }
+    }
+    
     public String extractUsername(String token) {
-        return extractAllClaims(token).getSubject();
+        return parseToken(token).getSubject();
     }
     
     public Long extractUserId(String token) {
-        return extractAllClaims(token).get("userId", Long.class);
+        return parseToken(token).get("userId", Long.class);
     }
     
     public String extractRole(String token) {
-        return extractAllClaims(token).get("role", String.class);
+        return parseToken(token).get("role", String.class);
     }
     
     public boolean isTokenValid(String token, String username) {
@@ -72,26 +97,18 @@ public class JwtUtil {
     }
     
     private boolean isTokenExpired(String token) {
-        return extractAllClaims(token).getExpiration().before(new Date());
+        return parseToken(token).getExpiration().before(new Date());
     }
     
-    private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-    }
-    
-    // For test compatibility - parseToken method
-    public Jws<Claims> parseToken(String token) {
+    // Additional method that might be needed by tests
+    public io.jsonwebtoken.Jws<io.jsonwebtoken.Claims> parseTokenToJws(String token) {
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
                     .parseClaimsJws(token);
-        } catch (Exception e) {
-            throw new RuntimeException("Invalid JWT token: " + e.getMessage());
+        } catch (JwtException e) {
+            throw new RuntimeException("Invalid JWT token: " + e.getMessage(), e);
         }
     }
 }
