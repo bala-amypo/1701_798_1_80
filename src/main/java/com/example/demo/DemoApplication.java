@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import com.example.demo.servlet.SimpleStatusServlet;
 
 @SpringBootApplication
-public class Application {
+public class DemoApplication {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
