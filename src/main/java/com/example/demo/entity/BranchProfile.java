@@ -1,57 +1,48 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "branch_profiles")
 public class BranchProfile {
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @Column(name = "branch_name", nullable = false)
-    private String branchName;
-    
-    @Column(name = "branch_code", unique = true)
     private String branchCode;
-    
-    @Column(name = "department")
-    private String department;
-    
-    @Column(name = "contact_email")
+    private String branchName;
     private String contactEmail;
-    
-    @Column(name = "contact_phone")
-    private String contactPhone;
-    
-    @Column(name = "address")
-    private String address;
-    
-    @Column(name = "is_active")
-    private Boolean isActive = true;
-    
+    private LocalDateTime lastSyncAt;
+    private Boolean active;
+
+    public BranchProfile() {}
+
+    public BranchProfile(Long id, String branchCode, String branchName, String contactEmail, LocalDateTime lastSyncAt, Boolean active) {
+        this.id = id;
+        this.branchCode = branchCode;
+        this.branchName = branchName;
+        this.contactEmail = contactEmail;
+        this.lastSyncAt = lastSyncAt;
+        this.active = active;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.lastSyncAt = LocalDateTime.now();
+        if (this.active == null) {
+            this.active = true;
+        }
+    }
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-    
-    public String getBranchName() { return branchName; }
-    public void setBranchName(String branchName) { this.branchName = branchName; }
-    
     public String getBranchCode() { return branchCode; }
     public void setBranchCode(String branchCode) { this.branchCode = branchCode; }
-    
-    public String getDepartment() { return department; }
-    public void setDepartment(String department) { this.department = department; }
-    
+    public String getBranchName() { return branchName; }
+    public void setBranchName(String branchName) { this.branchName = branchName; }
     public String getContactEmail() { return contactEmail; }
     public void setContactEmail(String contactEmail) { this.contactEmail = contactEmail; }
-    
-    public String getContactPhone() { return contactPhone; }
-    public void setContactPhone(String contactPhone) { this.contactPhone = contactPhone; }
-    
-    public String getAddress() { return address; }
-    public void setAddress(String address) { this.address = address; }
-    
-    public Boolean getIsActive() { return isActive; }
-    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+    public LocalDateTime getLastSyncAt() { return lastSyncAt; }
+    public void setLastSyncAt(LocalDateTime lastSyncAt) { this.lastSyncAt = lastSyncAt; }
+    public Boolean getActive() { return active; }
+    public void setActive(Boolean active) { this.active = active; }
 }
