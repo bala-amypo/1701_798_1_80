@@ -105,16 +105,16 @@
 //     }
 // }
 
-package com.example.demo.security;  // MUST be com.example.demo.security
+package com.example.demo.security;
 
 import com.example.demo.entity.UserAccount;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
+import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -128,24 +128,13 @@ public class JwtUtil {
     @Value("${jwt.expiration:86400000}")
     private long expiration;
     
-    private SecretKey key;
+    private Key signingKey;
     
-    @PostConstruct
+    @javax.annotation.PostConstruct
     public void initKey() {
-        // Ensure the key is at least 256 bits (32 characters)
-        String keyString = secret;
-        if (keyString.length() < 32) {
-            // Pad to reach 32 characters
-            StringBuilder sb = new StringBuilder(keyString);
-            while (sb.length() < 32) {
-                sb.append("0");
-            }
-            keyString = sb.toString();
-        } else if (keyString.length() > 32) {
-            // Truncate if too long
-            keyString = keyString.substring(0, 32);
-        }
-        this.key = Keys.hmacShaKeyFor(keyString.getBytes());
+        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(
+                DatatypeConverter.printBase64Binary(secret.getBytes()));
+        signingKey = new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS256.getJcaName());
     }
     
     public String generateToken(Map<String, Object> claims, String subject) {
@@ -154,7 +143,7 @@ public class JwtUtil {
                 .setSubject(subject)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(key, SignatureAlgorithm.HS256)
+                .signWith(SignatureAlgorithm.HS256, signingKey)
                 .compact();
     }
     
@@ -169,23 +158,10 @@ public class JwtUtil {
         return generateToken(claims, user.getEmail());
     }
     
-    public String generateToken(String email, String role) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("role", role);
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(email)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
-    }
-    
     public Jws<Claims> parseToken(String token) {
         try {
-            return Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
+            return Jwts.parser()
+                    .setSigningKey(signingKey)
                     .parseClaimsJws(token);
         } catch (JwtException e) {
             throw new RuntimeException("Invalid JWT token: " + e.getMessage(), e);
@@ -194,10 +170,6 @@ public class JwtUtil {
     
     public String extractUsername(String token) {
         return parseToken(token).getBody().getSubject();
-    }
-    
-    public String extractEmail(String token) {
-        return extractUsername(token);
     }
     
     public Long extractUserId(String token) {
