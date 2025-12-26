@@ -1,45 +1,27 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.AcademicEvent;
+import com.example.demo.exception.ValidationException;
 import com.example.demo.repository.AcademicEventRepository;
-import com.example.demo.service.AcademicEventService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Optional;
 
 @Service
-public class AcademicEventServiceImpl implements AcademicEventService {
-    
-    @Autowired
-    private AcademicEventRepository academicEventRepository;
-    
-    @Override
-    public List<AcademicEvent> getAllAcademicEvents() {
-        return academicEventRepository.findAll();
+public class AcademicEventServiceImpl {
+    private final AcademicEventRepository academicEventRepository;
+
+    public AcademicEventServiceImpl(AcademicEventRepository academicEventRepository) {
+        this.academicEventRepository = academicEventRepository;
     }
-    
-    @Override
-    public Optional<AcademicEvent> getAcademicEventById(Long id) {
-        return academicEventRepository.findById(id);
-    }
-    
-    @Override
-    public AcademicEvent saveAcademicEvent(AcademicEvent academicEvent) {
-        return academicEventRepository.save(academicEvent);
-    }
-    
-    @Override
-    public AcademicEvent updateAcademicEvent(Long id, AcademicEvent academicEvent) {
-        if (academicEventRepository.existsById(id)) {
-            academicEvent.setId(id);
-            return academicEventRepository.save(academicEvent);
+
+    public AcademicEvent createEvent(AcademicEvent event) {
+        if (event.getStartDate().isAfter(event.getEndDate())) {
+            throw new ValidationException("startDate cannot be after endDate");
         }
-        return null;
+        return academicEventRepository.save(event);
     }
-    
-    @Override
-    public void deleteAcademicEvent(Long id) {
-        academicEventRepository.deleteById(id);
+
+    public List<AcademicEvent> getEventsByBranch(Long branchId) {
+        return academicEventRepository.findByBranchId(branchId);
     }
 }

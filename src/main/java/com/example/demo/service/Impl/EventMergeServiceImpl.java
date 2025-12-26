@@ -1,41 +1,42 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.HarmonizedCalendar;
+import com.example.demo.entity.AcademicEvent;
+import com.example.demo.entity.EventMergeRecord;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.AcademicEventRepository;
-import com.example.demo.repository.HarmonizedCalendarRepository;
-import com.example.demo.service.EventMergeService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.repository.EventMergeRecordRepository;
 import org.springframework.stereotype.Service;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-public class EventMergeServiceImpl implements EventMergeService {
-    
-    @Autowired
-    private HarmonizedCalendarRepository harmonizedCalendarRepository;
-    
-    @Autowired
-    private AcademicEventRepository academicEventRepository;
-    
-    @Override
-    public List<HarmonizedCalendar> mergeAllCalendars() {
-        // Implementation logic for merging all calendars
-        // This is a simplified version
-        return harmonizedCalendarRepository.findAll();
+public class EventMergeServiceImpl {
+    private final AcademicEventRepository academicEventRepository;
+    private final EventMergeRecordRepository eventMergeRecordRepository;
+
+    public EventMergeServiceImpl(AcademicEventRepository academicEventRepository, EventMergeRecordRepository eventMergeRecordRepository) {
+        this.academicEventRepository = academicEventRepository;
+        this.eventMergeRecordRepository = eventMergeRecordRepository;
     }
-    
-    @Override
-    public HarmonizedCalendar mergeEvent(Long eventId, String sourceType) {
-        // Implementation logic for merging a single event
-        HarmonizedCalendar mergedEvent = new HarmonizedCalendar();
-        mergedEvent.setEventName("Merged Event " + eventId);
-        mergedEvent.setSourceSystem(sourceType);
-        mergedEvent.setOriginalEventId(eventId);
-        return harmonizedCalendarRepository.save(mergedEvent);
+
+    public EventMergeRecord mergeEvents(List<Long> eventIds, String reason) {
+        List<AcademicEvent> events = academicEventRepository.findAllById(eventIds);
+        if (events.isEmpty()) {
+            throw new ResourceNotFoundException("No events found");
+        }
+        
+        EventMergeRecord record = new EventMergeRecord();
+        record.setSourceEventIds(eventIds.stream().map(String::valueOf).collect(Collectors.joining(",")));
+        record.setMergedTitle("Merged: " + events.get(0).getTitle());
+        record.setMergedStartDate(events.stream().map(AcademicEvent::getStartDate).min(LocalDate::compareTo).orElse(LocalDate.now()));
+        record.setMergedEndDate(events.stream().map(AcademicEvent::getEndDate).max(LocalDate::compareTo).orElse(LocalDate.now()));
+        record.setMergeReason(reason);
+        
+        return eventMergeRecordRepository.save(record);
     }
-    
-    @Override
-    public List<HarmonizedCalendar> getMergedEvents() {
-        return harmonizedCalendarRepository.findAll();
+
+    public List<EventMergeRecord> getMergeRecordsByDate(LocalDate start, LocalDate end) {
+        return eventMergeRecordRepository.findByMergedStartDateBetween(start, end);
     }
 }
