@@ -17,7 +17,6 @@ public class JwtUtil {
     private SecretKey secretKey;
     private static final long EXPIRATION_TIME = 86400000; // 24 hours
     
-    // Constructor to initialize key
     public JwtUtil() {
         initKey();
     }
@@ -95,4 +94,4 @@ public class JwtUtil {
             throw new RuntimeException("Invalid JWT token: " + e.getMessage(), e);
         }
     }
-}   
+}
