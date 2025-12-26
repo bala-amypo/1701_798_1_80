@@ -1,36 +1,16 @@
-// package com.example.demo.entity;
+package com.example.demo.entity;
 
-// import jakarta.persistence.*;
-// import lombok.Getter;
-// import lombok.Setter;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
-// @Entity
-// @Getter
-// @Setter
-// public class ClashRecord {
-
-//     @Id
-//     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//     private Long id;
-
-//     private boolean resolved;
-// }
 @Entity
+@Table(name = "clash_record")
 public class ClashRecord {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long eventAId;
-    private Long eventBId;
-    private String clashType;
-    private String severity;
-    private String details;
-    private LocalDateTime detectedAt;
-    private Boolean resolved;
 
-    @PrePersist
-    public void prePersist() {
-        detectedAt = LocalDateTime.now();
-        if (resolved == null) resolved = false;
-    }
+    private String description;
+    private LocalDateTime detectedAt;
 }

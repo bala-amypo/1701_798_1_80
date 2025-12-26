@@ -1,39 +1,18 @@
-// package com.example.demo.entity;
+package com.example.demo.entity;
 
-// import jakarta.persistence.*;
-// import lombok.Getter;
-// import lombok.Setter;
-// import java.time.LocalDate;
+import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-// @Entity
-// @Getter
-// @Setter
-// public class HarmonizedCalendar {
-
-//     @Id
-//     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//     private Long id;
-
-//     private String title;
-//     private String generatedBy;
-//     private LocalDate effectiveFrom;
-//     private LocalDate effectiveTo;
-//     private String eventsJson;
-// }
 @Entity
+@Table(name = "harmonized_calendar")
 public class HarmonizedCalendar {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title;
-    private String generatedBy;
-    private LocalDateTime generatedAt;
-    private LocalDate effectiveFrom;
-    private LocalDate effectiveTo;
-    private String eventsJson;
 
-    @PrePersist
-    public void prePersist() {
-        generatedAt = LocalDateTime.now();
-    }
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private LocalDateTime createdAt;
 }
