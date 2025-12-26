@@ -14,17 +14,27 @@ import java.util.Map;
 @Component
 public class JwtUtil {
     
-    @Value("${jwt.secret:your-secret-key-for-jwt-token-generation-with-minimum-256-bits}")
+    @Value("${jwt.secret:your-256-bit-secret-key-for-jwt-generation-must-be-at-least-32-characters-long}")
     private String secret;
     
-    @Value("${jwt.expiration:86400000}") // 24 hours
+    @Value("${jwt.expiration:86400000}")
     private long expiration;
     
     private Key key;
     
     @PostConstruct
     public void initKey() {
-        this.key = Keys.hmacShaKeyFor(secret.getBytes());
+        // Ensure the key is at least 256 bits (32 characters)
+        byte[] keyBytes;
+        if (secret.length() < 32) {
+            // Pad the secret if it's too short
+            keyBytes = new byte[32];
+            byte[] secretBytes = secret.getBytes();
+            System.arraycopy(secretBytes, 0, keyBytes, 0, Math.min(secretBytes.length, 32));
+        } else {
+            keyBytes = secret.substring(0, 32).getBytes();
+        }
+        this.key = Keys.hmacShaKeyFor(keyBytes);
     }
     
     public String generateToken(Map<String, Object> claims, String subject) {
@@ -49,11 +59,15 @@ public class JwtUtil {
     }
     
     public Claims parseToken(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid JWT token", e);
+        }
     }
     
     public String extractUsername(String token) {
@@ -80,4 +94,4 @@ public class JwtUtil {
     private boolean isTokenExpired(String token) {
         return parseToken(token).getExpiration().before(new Date());
     }
-}   
+}
