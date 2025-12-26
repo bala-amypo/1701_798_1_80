@@ -27,7 +27,8 @@ public class BranchProfile {
 
     public BranchProfile() {}
 
-    public BranchProfile(Long id, String branchCode, String branchName, String contactEmail, LocalDateTime lastSyncAt, Boolean active) {
+    public BranchProfile(Long id, String branchCode, String branchName, 
+                        String contactEmail, LocalDateTime lastSyncAt, Boolean active) {
         this.id = id;
         this.branchCode = branchCode;
         this.branchName = branchName;
@@ -38,12 +39,8 @@ public class BranchProfile {
 
     @PrePersist
     protected void prePersist() {
-        if (this.lastSyncAt == null) {
-            this.lastSyncAt = LocalDateTime.now();
-        }
-        if (this.active == null) {
-            this.active = true;
-        }
+        if (this.lastSyncAt == null) this.lastSyncAt = LocalDateTime.now();
+        if (this.active == null) this.active = true;
     }
 
     // Getters and Setters

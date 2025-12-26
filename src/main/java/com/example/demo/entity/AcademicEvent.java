@@ -53,9 +53,7 @@ public class AcademicEvent {
 
     @PrePersist
     protected void prePersist() {
-        if (this.submittedAt == null) {
-            this.submittedAt = LocalDateTime.now();
-        }
+        if (this.submittedAt == null) this.submittedAt = LocalDateTime.now();
     }
 
     // Getters and Setters

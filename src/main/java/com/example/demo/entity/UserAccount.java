@@ -30,7 +30,8 @@ public class UserAccount {
 
     public UserAccount() {}
 
-    public UserAccount(Long id, String fullName, String email, String password, String role, String department, LocalDateTime createdAt) {
+    public UserAccount(Long id, String fullName, String email, String password, 
+                      String role, String department, LocalDateTime createdAt) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
@@ -42,12 +43,8 @@ public class UserAccount {
 
     @PrePersist
     protected void prePersist() {
-        if (this.createdAt == null) {
-            this.createdAt = LocalDateTime.now();
-        }
-        if (this.role == null) {
-            this.role = "REVIEWER";
-        }
+        if (this.createdAt == null) this.createdAt = LocalDateTime.now();
+        if (this.role == null) this.role = "REVIEWER";
     }
 
     // Getters and Setters
