@@ -16,12 +16,27 @@ import java.util.Map;
 @Component
 public class JwtUtil {
 
-    // Use SAME secret as application.properties
     private static final String SECRET =
             "your-256-bit-secret-key-for-jwt-generation-must-be-at-least-32-characters-long";
 
-    private final SecretKey key =
-            Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
+    private SecretKey key;
+
+    /**
+     * REQUIRED by test file
+     * Must exist and initialize key
+     */
+    public void initKey() {
+        this.key = Keys.hmacShaKeyFor(
+                SECRET.getBytes(StandardCharsets.UTF_8)
+        );
+    }
+
+    private SecretKey getKey() {
+        if (key == null) {
+            initKey(); // safety for runtime usage
+        }
+        return key;
+    }
 
     public String generateToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
@@ -29,7 +44,7 @@ public class JwtUtil {
                 .subject(subject)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 86400000))
-                .signWith(key, SignatureAlgorithm.HS256)
+                .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -75,7 +90,7 @@ public class JwtUtil {
 
     public Jws<Claims> parseToken(String token) {
         return Jwts.parser()
-                .verifyWith(key)
+                .verifyWith(getKey())
                 .build()
                 .parseSignedClaims(token);
     }
