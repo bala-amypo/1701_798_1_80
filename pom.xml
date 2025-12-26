@@ -20,6 +20,7 @@
 
     <properties>
         <java.version>17</java.version>
+        <springdoc.version>2.2.0</springdoc.version>
     </properties>
 
     <dependencies>
@@ -67,6 +68,13 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- SpringDoc OpenAPI (Swagger) -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>${springdoc.version}</version>
+        </dependency>
+
         <!-- Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -100,12 +108,10 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.1.2</version>
+                <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <suiteXmlFiles>
-                        <suiteXmlFile>testng.xml</suiteXmlFile>
-                    </suiteXmlFiles>
+                    <source>17</source>
+                    <target>17</target>
                 </configuration>
             </plugin>
         </plugins>
