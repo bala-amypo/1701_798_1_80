@@ -1,17 +1,17 @@
-package com.example.demo.service;
+// package com.example.demo.service;
 
-import com.example.demo.entity.UserAccount;
-import java.util.List;
-import java.util.Optional;
+// import com.example.demo.entity.UserAccount;
+// import java.util.List;
+// import java.util.Optional;
 
-public interface UserAccountService {
-    List<UserAccount> getAllUserAccounts();
-    Optional<UserAccount> getUserAccountById(Long id);
-    UserAccount saveUserAccount(UserAccount userAccount);
-    UserAccount updateUserAccount(Long id, UserAccount userAccount);
-    void deleteUserAccount(Long id);
-    Optional<UserAccount> getUserByUsername(String username);
-    Optional<UserAccount> getUserByEmail(String email);
-    boolean existsByUsername(String username);
-    boolean existsByEmail(String email);
-}
+// public interface UserAccountService {
+//     List<UserAccount> getAllUserAccounts();
+//     Optional<UserAccount> getUserAccountById(Long id);
+//     UserAccount saveUserAccount(UserAccount userAccount);
+//     UserAccount updateUserAccount(Long id, UserAccount userAccount);
+//     void deleteUserAccount(Long id);
+//     Optional<UserAccount> getUserByUsername(String username);
+//     Optional<UserAccount> getUserByEmail(String email);
+//     boolean existsByUsername(String username);
+//     boolean existsByEmail(String email);
+// }
