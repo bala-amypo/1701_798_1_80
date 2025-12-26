@@ -30,7 +30,6 @@ public class EventMergeServiceImpl implements EventMergeService {
         EventMergeRecord mergeRecord = new EventMergeRecord();
         mergeRecord.setSourceEventIds(String.join(",", eventIds.stream().map(String::valueOf).toList()));
         
-        // Determine merged dates (earliest start, latest end)
         LocalDate earliestStart = events.stream()
                 .map(AcademicEvent::getStartDate)
                 .min(LocalDate::compareTo)
@@ -42,7 +41,7 @@ public class EventMergeServiceImpl implements EventMergeService {
         
         mergeRecord.setMergedStartDate(earliestStart);
         mergeRecord.setMergedEndDate(latestEnd);
-        mergeRecord.setMergedTitle("Merged: " + events.get(0).getTitle());
+        mergeRecord.setMergedTitle("Merged Event");
         mergeRecord.setMergeReason(mergeReason);
         
         return eventMergeRecordRepository.save(mergeRecord);

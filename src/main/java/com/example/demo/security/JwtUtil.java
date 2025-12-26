@@ -15,7 +15,7 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
     private SecretKey secretKey;
-    private static final long EXPIRATION_TIME = 86400000; // 24 hours
+    private static final long EXPIRATION_TIME = 86400000;
     
     public JwtUtil() {
         initKey();
