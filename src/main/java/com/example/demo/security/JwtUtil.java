@@ -1,96 +1,65 @@
 package com.example.demo.security;
 
-import com.example.demo.entity.UserAccount;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
-import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Map;
 
-@Component
 public class JwtUtil {
 
-    private static final String SECRET =
-            "your-256-bit-secret-key-for-jwt-generation-must-be-at-least-32-characters-long";
+    // Secret key for signing the token (use a secure random key in production)
+    private final SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-    private SecretKey key;
+    // Token validity (e.g., 1 hour)
+    private final long jwtExpirationMs = 3600000;
 
-    /**
-     * REQUIRED by test file
-     * Automatically initializes key at startup
-     */
-    @PostConstruct
-    public void initKey() {
-        this.key = Keys.hmacShaKeyFor(
-                SECRET.getBytes(StandardCharsets.UTF_8)
-        );
-    }
-
-    private SecretKey getKey() {
-        return key;
-    }
-
-    public String generateToken(Map<String, Object> claims, String subject) {
+    // Generate a JWT token
+    public String generateToken(String username, Map<String, Object> claims) {
         return Jwts.builder()
-                .claims(claims)
-                .subject(subject)
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 86400000))
-                .signWith(getKey(), SignatureAlgorithm.HS256)
+                .setClaims(claims)        // Claims map
+                .setSubject(username)      // Subject (username)
+                .setIssuedAt(new Date())   // Current time
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs)) // Expiry
+                .signWith(secretKey)       // Sign with secret key
                 .compact();
     }
 
-    public String generateTokenForUser(UserAccount user) {
-        Map<String, Object> claims = Map.of(
-                "email", user.getEmail(),
-                "role", user.getRole(),
-                "userId", user.getId()
-        );
-        return generateToken(claims, user.getEmail());
-    }
-
-    public String extractUsername(String token) {
-        return parseToken(token).getPayload().getSubject();
-    }
-
-    public String extractRole(String token) {
-        return parseToken(token).getPayload().get("role", String.class);
-    }
-
-    public Long extractUserId(String token) {
-        Object userId = parseToken(token).getPayload().get("userId");
-        return userId instanceof Integer
-                ? ((Integer) userId).longValue()
-                : (Long) userId;
-    }
-
-    public boolean isTokenValid(String token, String username) {
-        try {
-            return extractUsername(token).equals(username)
-                    && !isTokenExpired(token);
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    private boolean isTokenExpired(String token) {
-        return parseToken(token)
-                .getPayload()
-                .getExpiration()
-                .before(new Date());
-    }
-
-    public Jws<Claims> parseToken(String token) {
-        return Jwts.parser()
-                .verifyWith(getKey())
+    // Extract claims from JWT token
+    public Claims extractAllClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)  // Set signing key
                 .build()
-                .parseSignedClaims(token);
+                .parseClaimsJws(token)     // Parse the token
+                .getBody();                // Get claims (body)
+    }
+
+    // Extract username (subject) from token
+    public String extractUsername(String token) {
+        return extractAllClaims(token).getSubject();
+    }
+
+    // Extract expiration date
+    public Date extractExpiration(String token) {
+        return extractAllClaims(token).getExpiration();
+    }
+
+    // Check if token is expired
+    public boolean isTokenExpired(String token) {
+        return extractExpiration(token).before(new Date());
+    }
+
+    // Validate token
+    public boolean validateToken(String token, String username) {
+        final String tokenUsername = extractUsername(token);
+        return (tokenUsername.equals(username) && !isTokenExpired(token));
+    }
+
+    // Get the secret key (optional, if needed elsewhere)
+    public SecretKey getSecretKey() {
+        return secretKey;
     }
 }
