@@ -47,12 +47,8 @@ public class ClashRecord {
 
     @PrePersist
     protected void prePersist() {
-        if (this.detectedAt == null) {
-            this.detectedAt = LocalDateTime.now();
-        }
-        if (this.resolved == null) {
-            this.resolved = false;
-        }
+        if (this.detectedAt == null) this.detectedAt = LocalDateTime.now();
+        if (this.resolved == null) this.resolved = false;
     }
 
     // Getters and Setters
@@ -72,4 +68,4 @@ public class ClashRecord {
     public void setDetectedAt(LocalDateTime detectedAt) { this.detectedAt = detectedAt; }
     public Boolean getResolved() { return resolved; }
     public void setResolved(Boolean resolved) { this.resolved = resolved; }
-}
+}   

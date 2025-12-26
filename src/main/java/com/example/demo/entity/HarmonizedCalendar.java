@@ -45,9 +45,7 @@ public class HarmonizedCalendar {
 
     @PrePersist
     protected void prePersist() {
-        if (this.generatedAt == null) {
-            this.generatedAt = LocalDateTime.now();
-        }
+        if (this.generatedAt == null) this.generatedAt = LocalDateTime.now();
     }
 
     // Getters and Setters
@@ -65,4 +63,4 @@ public class HarmonizedCalendar {
     public void setEffectiveTo(LocalDate effectiveTo) { this.effectiveTo = effectiveTo; }
     public String getEventsJson() { return eventsJson; }
     public void setEventsJson(String eventsJson) { this.eventsJson = eventsJson; }
-}
+}   
