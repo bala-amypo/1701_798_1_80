@@ -1,30 +1,26 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.entity.AcademicEvent;
+import com.example.demo.repository.AcademicEventRepository;
+import com.example.demo.service.AcademicEventService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 @Service
-public class UserAccountServiceImpl implements UserAccountService {
+public class AcademicEventServiceImpl implements AcademicEventService {
 
-    private final UserAccountRepository repo;
-    private final PasswordEncoder encoder;
+    private final AcademicEventRepository repository;
 
-    public UserAccountServiceImpl(UserAccountRepository repo,
-                                  PasswordEncoder encoder) {
-        this.repo = repo;
-        this.encoder = encoder;
+    public AcademicEventServiceImpl(AcademicEventRepository repository) {
+        this.repository = repository;
     }
 
-    public UserAccount register(UserAccount user) {
-        if (repo.existsByEmail(user.getEmail()))
-            throw new ValidationException("Email already in use");
-
-        if (user.getPassword().length() < 8)
-            throw new ValidationException("Password must be at least 8 characters");
-
-        user.setPassword(encoder.encode(user.getPassword()));
-        return repo.save(user);
+    public AcademicEvent save(AcademicEvent event) {
+        return repository.save(event);
     }
 
-    public UserAccount getUser(Long id) {
-        return repo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    public List<AcademicEvent> findAll() {
+        return repository.findAll();
     }
 }
