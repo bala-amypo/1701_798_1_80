@@ -1,11 +1,11 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.AcademicEvent;
-import com.example.demo.exception.ValidationException;
 import com.example.demo.repository.AcademicEventRepository;
 import com.example.demo.service.AcademicEventService;
 import org.springframework.stereotype.Service;
 
+import javax.validation.ValidationException;
 import java.util.List;
 
 @Service
@@ -31,15 +31,16 @@ public class AcademicEventServiceImpl implements AcademicEventService {
     }
 
     @Override
-    public AcademicEvent save(AcademicEvent event) {
-        return repository.save(event);
+    public List<AcademicEvent> findAllEvents() {
+        return repository.findAll();
     }
 
     @Override
-    public List<AcademicEvent> findAll() {
-        return repository.findAll();
+    public AcademicEvent saveEvent(AcademicEvent event) {
+        return repository.save(event);
     }
 }
+
 
 
 
