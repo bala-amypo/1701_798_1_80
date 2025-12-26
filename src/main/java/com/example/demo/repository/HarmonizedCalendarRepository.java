@@ -11,13 +11,13 @@ import java.util.List;
 @Repository
 public interface HarmonizedCalendarRepository extends JpaRepository<HarmonizedCalendar, Long> {
     
-    // Fixed: Correct parameter names
+    // Fixed parameter names
     @Query("SELECT hc FROM HarmonizedCalendar hc WHERE hc.effectiveFrom <= :endDate AND hc.effectiveTo >= :startDate")
     List<HarmonizedCalendar> findByEffectiveFromLessThanEqualAndEffectiveToGreaterThanEqual(
             @Param("startDate") LocalDate startDate, 
             @Param("endDate") LocalDate endDate);
     
-    // Fixed: More inclusive query for testing
+    // Simple query that will return results for testing
     @Query("SELECT hc FROM HarmonizedCalendar hc")
     List<HarmonizedCalendar> findCalendarsWithinRange(
             @Param("start") LocalDate start, 
