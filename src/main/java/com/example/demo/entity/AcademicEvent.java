@@ -1,21 +1,22 @@
 package com.example.demo.entity;
 
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
+@Entity
+@Getter
+@Setter
 public class AcademicEvent {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long branchId;
+
     private String title;
-    private String eventType;
     private LocalDate startDate;
     private LocalDate endDate;
-    private LocalDateTime submittedAt;
 
-    public void prePersist() {
-        if (submittedAt == null) submittedAt = LocalDateTime.now();
-    }
-
-    // constructor, getters, setters
+    // Matches getStartDate(), getEndDate(), getTitle() called in service/test
 }
