@@ -34,11 +34,7 @@ import java.util.List;
 @Repository
 public interface HarmonizedCalendarRepository extends JpaRepository<HarmonizedCalendar, Long> {
     
-    // ADD THIS METHOD - This is what the test is calling
+    // ADD THIS METHOD - Exactly as the test expects
     List<HarmonizedCalendar> findByEffectiveFromLessThanEqualAndEffectiveToGreaterThanEqual(
         LocalDate date1, LocalDate date2);
-    
-    // ALSO add this method if you need it for the service
-    List<HarmonizedCalendar> findByEffectiveFromLessThanEqualAndEffectiveToGreaterThanEqual(
-        LocalDate endDate, LocalDate startDate);
 }
