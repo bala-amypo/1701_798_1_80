@@ -77,30 +77,20 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user_accounts")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class UserAccount {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    // This field is REQUIRED by your database (NOT NULL)
     @Column(name = "first_name", nullable = false)
     private String firstName;
     
-    // This is what your API sends as "fullName"
     @Column(name = "full_name")
     private String fullName;
     
@@ -118,32 +108,23 @@ public class UserAccount {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
     
-    // This method runs BEFORE saving to database
+    // ... [your existing constructors, getters, setters] ...
+    
+    // ADD THIS METHOD - IT FIXES THE ERROR
     @PrePersist
     @PreUpdate
     private void prepareData() {
-        // If firstName is empty/null but fullName exists, extract firstName from fullName
+        // If firstName is empty but fullName exists, extract firstName from fullName
         if ((firstName == null || firstName.isEmpty()) && 
             fullName != null && !fullName.isEmpty()) {
             String[] names = fullName.split(" ", 2);
             this.firstName = names[0];
         }
         
-        // If fullName is empty/null but firstName exists, set fullName = firstName
+        // If fullName is empty but firstName exists, set fullName = firstName
         if ((fullName == null || fullName.isEmpty()) && 
             firstName != null && !firstName.isEmpty()) {
             this.fullName = this.firstName;
         }
-    }
-    
-    // Optional: Add this constructor for easier object creation
-    public UserAccount(String fullName, String email, String password, 
-                      String role, String department) {
-        this.fullName = fullName;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.department = department;
-        // firstName will be auto-set by @PrePersist
     }
 }
