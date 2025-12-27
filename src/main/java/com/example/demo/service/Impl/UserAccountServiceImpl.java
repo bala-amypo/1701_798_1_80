@@ -1,63 +1,64 @@
-package com.example.demo.service.impl;
+// package com.example.demo.service.impl;
 
-import com.example.demo.entity.UserAccount;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.exception.ValidationException;
-import com.example.demo.repository.UserAccountRepository;
-import com.example.demo.service.UserAccountService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+// import com.example.demo.entity.UserAccount;
+// import com.example.demo.exception.ResourceNotFoundException;
+// import com.example.demo.exception.ValidationException;
+// import com.example.demo.repository.UserAccountRepository;
+// import com.example.demo.service.UserAccountService;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.security.crypto.password.PasswordEncoder;
+// import org.springframework.stereotype.Service;
+// import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+// import java.util.List;
+// import java.util.Optional;
 
-@Service
-@Transactional
-public class UserAccountServiceImpl implements UserAccountService {
+// @Service
+// @Transactional
+// public class UserAccountServiceImpl implements UserAccountService {
     
-    private final UserAccountRepository userAccountRepository;
-    private final PasswordEncoder passwordEncoder;
+//     private final UserAccountRepository userAccountRepository;
+//     private final PasswordEncoder passwordEncoder;
     
-    @Autowired
-    public UserAccountServiceImpl(UserAccountRepository userAccountRepository, PasswordEncoder passwordEncoder) {
-        this.userAccountRepository = userAccountRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+//     @Autowired
+//     public UserAccountServiceImpl(UserAccountRepository userAccountRepository, PasswordEncoder passwordEncoder) {
+//         this.userAccountRepository = userAccountRepository;
+//         this.passwordEncoder = passwordEncoder;
+//     }
     
-    @Override
-    public UserAccount register(UserAccount user) {
-        if (user.getPassword().length() < 8) {
-            throw new ValidationException("Password must be at least 8 characters");
-        }
+//     @Override
+//     public UserAccount register(UserAccount user) {
+//         if (user.getPassword().length() < 8) {
+//             throw new ValidationException("Password must be at least 8 characters");
+//         }
         
-        if (userAccountRepository.existsByEmail(user.getEmail())) {
-            throw new ValidationException("Email already in use");
-        }
+//         if (userAccountRepository.existsByEmail(user.getEmail())) {
+//             throw new ValidationException("Email already in use");
+//         }
         
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//         user.setPassword(passwordEncoder.encode(user.getPassword()));
         
-        if (user.getRole() == null) {
-            user.setRole("REVIEWER");
-        }
+//         if (user.getRole() == null) {
+//             user.setRole("REVIEWER");
+//         }
         
-        return userAccountRepository.save(user);
-    }
+//         return userAccountRepository.save(user);
+//     }
     
-    @Override
-    public UserAccount getUser(Long id) {
-        return userAccountRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
-    }
+//     @Override
+//     public UserAccount getUser(Long id) {
+//         return userAccountRepository.findById(id)
+//                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+//     }
     
-    @Override
-    public List<UserAccount> getAllUsers() {
-        return userAccountRepository.findAll();
-    }
+//     @Override
+//     public List<UserAccount> getAllUsers() {
+//         return userAccountRepository.findAll();
+//     }
     
-    @Override
-    public Optional<UserAccount> findByEmail(String email) {
-        return userAccountRepository.findByEmail(email);
-    }
-}
+//     @Override
+//     public Optional<UserAccount> findByEmail(String email) {
+//         return userAccountRepository.findByEmail(email);
+//     }
+// }
+
