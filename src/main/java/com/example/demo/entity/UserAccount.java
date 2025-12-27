@@ -74,21 +74,3 @@
 //     }
 // }
 
-@Entity
-@Table(name = "user_accounts")
-public class User {
-    
-    @Column(name = "first_name", nullable = false)
-    private String firstName;
-    
-    // OR if it's mapped from fullName, add this:
-    @Transient
-    public String getFirstName() {
-        if (fullName != null && fullName.contains(" ")) {
-            return fullName.split(" ")[0];
-        }
-        return fullName;
-    }
-    
-    // Add setter if needed
-}
