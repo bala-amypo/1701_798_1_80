@@ -176,77 +176,78 @@ import org.springframework.web.bind.annotation.*;
 public class UserAccountController {
 
     @Autowired
-    private UserAccountService userAccountService;
+        private UserAccountService userAccountService;
 
-    @Autowired
-    private JwtUtil jwtUtil;
-    
-    @PostMapping("/register")
-    public UserAccount registerUser(@RequestBody UserAccount user) {
-        return userAccountService.register(user);
-    }
-//     @PostMapping("/register")
-//     public ResponseEntity<AuthResponse> registerUser(
-//             @RequestBody RegisterRequest request) {
+            @Autowired
+                private JwtUtil jwtUtil;
+                    
+                        @PostMapping("/register")
+                            public UserAccount registerUser(@RequestBody UserAccount user) {
+                                    return userAccountService.register(user);
+                                        }
+                                        //     @PostMapping("/register")
+                                        //     public ResponseEntity<AuthResponse> registerUser(
+                                        //             @RequestBody RegisterRequest request) {
 
-//         UserAccount user = new UserAccount();
-//         user.setFullName(request.getFullName());
-//         user.setEmail(request.getEmail());
-//         user.setPassword(request.getPassword());
-//         user.setRole(request.getRole());
-//         user.setDepartment(request.getDepartment());
+                                        //         UserAccount user = new UserAccount();
+                                        //         user.setFullName(request.getFullName());
+                                        //         user.setEmail(request.getEmail());
+                                        //         user.setPassword(request.getPassword());
+                                        //         user.setRole(request.getRole());
+                                        //         user.setDepartment(request.getDepartment());
 
-//         UserAccount savedUser = userAccountService.registerUser(user);
-//         String email = request.getEmail();
-//         // ✅ FIX IS HERE
-//         String token = jwtUtil.generateToken(
-//         Map.of("email", email),
-//         email
-// );
-
-
-//         AuthResponse response = new AuthResponse(
-//                 token,
-//                 savedUser.getEmail(),
-//                 savedUser.getRole()
-//         );
-
-//         return ResponseEntity.ok(response);
-//     }
-
-    @PostMapping("/login")
-    public ResponseEntity<AuthResponse> loginUser(
-            @RequestBody LoginRequest request) {
-
-        UserAccount user = userAccountService.authenticate(
-                request.getEmail(),
-                request.getPassword()
-        );
-        String email = request.getEmail();
-        // ✅ FIX IS HERE
-        String token = jwtUtil.generateToken(
-        Map.of(
-                "userId", user.getId(),
-                "email", user.getEmail(),
-                "role", user.getRole()
-        ),
-        user.getEmail()
-);
+                                        //         UserAccount savedUser = userAccountService.registerUser(user);
+                                        //         String email = request.getEmail();
+                                        //         // ✅ FIX IS HERE
+                                        //         String token = jwtUtil.generateToken(
+                                        //         Map.of("email", email),
+                                        //         email
+                                        // );
 
 
-        AuthResponse response = new AuthResponse(
-                token,
-                user.getEmail(),
-                user.getRole()
-        );
+                                        //         AuthResponse response = new AuthResponse(
+                                        //                 token,
+                                        //                 savedUser.getEmail(),
+                                        //                 savedUser.getRole()
+                                        //         );
 
-        return ResponseEntity.ok(response);
-    }
+                                        //         return ResponseEntity.ok(response);
+                                        //     }
 
-    @GetMapping("/status")
-    public ResponseEntity<ApiResponse> status() {
-        return ResponseEntity.ok(
-                new ApiResponse(true, "Service is running")
-        );
-    }
-}
+                                            @PostMapping("/login")
+                                                public ResponseEntity<AuthResponse> loginUser(
+                                                            @RequestBody LoginRequest request) {
+
+                                                                    UserAccount user = userAccountService.authenticate(
+                                                                                    request.getEmail(),
+                                                                                                    request.getPassword()
+                                                                                                            );
+                                                                                                                    String email = request.getEmail();
+                                                                                                                            // ✅ FIX IS HERE
+                                                                                                                                    String token = jwtUtil.generateToken(
+                                                                                                                                            Map.of(
+                                                                                                                                                            "userId", user.getId(),
+                                                                                                                                                                            "email", user.getEmail(),
+                                                                                                                                                                                            "role", user.getRole()
+                                                                                                                                                                                                    ),
+                                                                                                                                                                                                            user.getEmail()
+                                                                                                                                                                                                            );
+
+
+                                                                                                                                                                                                                    AuthResponse response = new AuthResponse(
+                                                                                                                                                                                                                                    token,
+                                                                                                                                                                                                                                                    user.getEmail(),
+                                                                                                                                                                                                                                                                    user.getRole()
+                                                                                                                                                                                                                                                                            );
+
+                                                                                                                                                                                                                                                                                    return ResponseEntity.ok(response);
+                                                                                                                                                                                                                                                                                        }
+
+                                                                                                                                                                                                                                                                                            @GetMapping("/status")
+                                                                                                                                                                                                                                                                                                public ResponseEntity<ApiResponse> status() {
+                                                                                                                                                                                                                                                                                                        return ResponseEntity.ok(
+                                                                                                                                                                                                                                                                                                                        new ApiResponse(true, "Service is running")
+                                                                                                                                                                                                                                                                                                                                );
+                                                                                                                                                                                                                                                                                                                                    }
+
+                                                                                                                                                                                                                                                                                                                                    
