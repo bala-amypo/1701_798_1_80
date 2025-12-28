@@ -10,22 +10,21 @@
 
 // @Service
 // public class CustomUserDetailsService implements UserDetailsService {
-    
-//     private final UserAccountRepository userAccountRepository;
-    
+
 //     @Autowired
-//     public CustomUserDetailsService(UserAccountRepository userAccountRepository) {
-//         this.userAccountRepository = userAccountRepository;
-//     }
-    
+//     private UserAccountRepository userRepo;
+
 //     @Override
 //     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-//         UserAccount user = userAccountRepository.findByEmail(email)
+//         UserAccount user = userRepo.findByEmail(email)
 //                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
-//         return new CustomUserDetails(user);
+//         return org.springframework.security.core.userdetails.User
+//                 .withUsername(user.getEmail())
+//                 .password(user.getPassword())
+//                 .authorities("USER") // simple role
+//                 .build();
 //     }
 // }
-
 package com.example.demo.security;
 import org.springframework.stereotype.Service;
 import com.example.demo.repository.UserAccountRepository;
