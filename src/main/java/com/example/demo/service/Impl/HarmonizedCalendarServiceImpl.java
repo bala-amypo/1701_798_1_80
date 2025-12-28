@@ -101,54 +101,51 @@
 //                         new ResourceNotFoundException("Calendar not found"));
 //     }
 // }
-package com.example.demo.service.impl;
+
+
+package com.example.demo.controller;
 
 import com.example.demo.entity.HarmonizedCalendar;
-import com.example.demo.repository.HarmonizedCalendarRepository;
 import com.example.demo.service.HarmonizedCalendarService;
-import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 import java.util.List;
 
-@Service
-public class HarmonizedCalendarServiceImpl implements HarmonizedCalendarService {
+@RestController
+@RequestMapping("/api/harmonized-calendar")
+@SecurityRequirement(name = "bearerAuth")
+public class HarmonizedCalendarController {
 
-    private final HarmonizedCalendarRepository repo;
+    private final HarmonizedCalendarService calendarService;
 
-    public HarmonizedCalendarServiceImpl(HarmonizedCalendarRepository repo) {
-        this.repo = repo;
+    public HarmonizedCalendarController(HarmonizedCalendarService calendarService) {
+        this.calendarService = calendarService;
     }
     
-    @Override
-    public HarmonizedCalendar generateHarmonizedCalendar(String title, String by) {
-        HarmonizedCalendar cal = new HarmonizedCalendar();
-        cal.setTitle(title);
-        cal.setGeneratedBy(by);
-        return repo.save(cal);
+    @PostMapping("/generate/{title}/{by}")
+    public HarmonizedCalendar generateCalendar(@PathVariable String title, @PathVariable String by) {
+        return calendarService.generateHarmonizedCalendar(title, by);
+    }
+    // @PostMapping
+    // public ResponseEntity<HarmonizedCalendar> generateCalendar(
+    //         @RequestParam String title,
+    //         @RequestParam String generatedBy) {
+
+    //     return ResponseEntity.ok(
+    //             calendarService.generateCalendar(title, generatedBy)
+    //     );
+    // }
+
+    @GetMapping
+    public ResponseEntity<List<HarmonizedCalendar>> getAllCalendars() {
+        return ResponseEntity.ok(calendarService.getAllCalendars());
     }
 
-    @Override
-    public List<HarmonizedCalendar> getAllCalendars() {
-        return repo.findAll();
+    @GetMapping("/{id}")
+    public ResponseEntity<HarmonizedCalendar> getCalendar(@PathVariable Long id) {
+        return ResponseEntity.ok(calendarService.getCalendar(id));
     }
-
-    @Override
-    public HarmonizedCalendar getCalendar(Long id) {
-        return repo.findById(id).orElseThrow();
-    }
-
-//     public HarmonizedCalendar generateHarmonizedCalendar(String title, String generatedBy) {
-//     HarmonizedCalendar cal = new HarmonizedCalendar();
-//     cal.setTitle(title);
-//     cal.setGeneratedBy(generatedBy);
-//     cal.prePersist();
-//     return harmonizedCalendarRepository.save(cal);
-// }
-
-public List<HarmonizedCalendar> getCalendarsWithinRange(LocalDate start, LocalDate end) {
-    return repo.findByEffectiveFromLessThanEqualAndEffectiveToGreaterThanEqual(start, end);
-}
-
 }
