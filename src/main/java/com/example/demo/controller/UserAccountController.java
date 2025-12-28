@@ -100,33 +100,33 @@
 // }
 
 
-package com.example.demo.controller;
+// package com.example.demo.controller;
 
-import com.example.demo.dto.*;
-import com.example.demo.entity.UserAccount;
+// import com.example.demo.dto.*;
+// import com.example.demo.entity.UserAccount;
 
-import com.example.demo.service.UserAccountService;
-import com.example.demo.security.JwtUtil;
-import java.util.Map;
+// import com.example.demo.service.UserAccountService;
+// import com.example.demo.security.JwtUtil;
+// import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.http.ResponseEntity;
+// import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/api/users")
-public class UserAccountController {
+// @RestController
+// @RequestMapping("/api/users")
+// public class UserAccountController {
 
-    @Autowired
-    private UserAccountService userAccountService;
+//     @Autowired
+//     private UserAccountService userAccountService;
 
-    @Autowired
-    private JwtUtil jwtUtil;
+//     @Autowired
+//     private JwtUtil jwtUtil;
     
-    @PostMapping("/register")
-    public UserAccount registerUser(@RequestBody UserAccount user) {
-        return userAccountService.register(user);
-    }
+//     @PostMapping("/register")
+//     public UserAccount registerUser(@RequestBody UserAccount user) {
+//         return userAccountService.register(user);
+    //}
 //     @PostMapping("/register")
 //     public ResponseEntity<AuthResponse> registerUser(
 //             @RequestBody RegisterRequest request) {
@@ -249,5 +249,6 @@ public class UserAccountController {
                                                                                                                                                                                                                                                                                                                         new ApiResponse(true, "Service is running")
                                                                                                                                                                                                                                                                                                                                 );
                                                                                                                                                                                                                                                                                                                                     }
-
+                                                                                                                                                                                                                                                                                                                                    }
                                                                                                                                                                                                                                                                                                                                     
+
