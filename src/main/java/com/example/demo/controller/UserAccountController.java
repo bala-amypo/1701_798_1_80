@@ -79,7 +79,7 @@ public class UserAccountController {
             @Autowired
                 private JwtUtil jwtUtil;
                     
-                        @PostMapping("/register")
+                        @PostMapping("/rregister")
                             public UserAccount registerUser(@RequestBody UserAccount user) {
                                     return userAccountService.register(user);
                                         }
