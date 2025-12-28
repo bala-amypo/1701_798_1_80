@@ -2,56 +2,57 @@
 
 // import com.example.demo.entity.BranchProfile;
 // import com.example.demo.exception.ResourceNotFoundException;
+// import com.example.demo.exception.ValidationException;
 // import com.example.demo.repository.BranchProfileRepository;
 // import com.example.demo.service.BranchProfileService;
-// import org.springframework.beans.factory.annotation.Autowired;
+
 // import org.springframework.stereotype.Service;
-// import org.springframework.transaction.annotation.Transactional;
 
 // import java.util.List;
-// import java.util.Optional;
 
 // @Service
-// @Transactional
 // public class BranchProfileServiceImpl implements BranchProfileService {
-    
-//     private final BranchProfileRepository branchProfileRepository;
-    
-//     @Autowired
-//     public BranchProfileServiceImpl(BranchProfileRepository branchProfileRepository) {
-//         this.branchProfileRepository = branchProfileRepository;
+
+//     private final BranchProfileRepository branchRepo;
+
+//     public BranchProfileServiceImpl(BranchProfileRepository branchRepo) {
+//         this.branchRepo = branchRepo;
 //     }
-    
+
 //     @Override
 //     public BranchProfile createBranch(BranchProfile branch) {
-//         return branchProfileRepository.save(branch);
+
+//         if (branchRepo.existsByBranchCode(branch.getBranchCode())) {
+//             throw new ValidationException("Branch code already exists");
+//         }
+
+//         return branchRepo.save(branch);
 //     }
-    
+
 //     @Override
-//     public BranchProfile updateBranchStatus(Long id, boolean active) {
-//         BranchProfile branch = branchProfileRepository.findById(id)
-//                 .orElseThrow(() -> new ResourceNotFoundException("Branch not found with id: " + id));
-//         branch.setActive(active);
-//         return branchProfileRepository.save(branch);
+//     public BranchProfile getBranch(Long id) {
+//         return branchRepo.findById(id)
+//                 .orElseThrow(() ->
+//                         new ResourceNotFoundException("Branch not found"));
 //     }
-    
+
 //     @Override
 //     public List<BranchProfile> getAllBranches() {
-//         return branchProfileRepository.findAll();
+//         return branchRepo.findAll();
 //     }
-    
-//     @Override
-//     public BranchProfile getBranchById(Long id) {
-//         return branchProfileRepository.findById(id)
-//                 .orElseThrow(() -> new ResourceNotFoundException("Branch not found with id: " + id));
-//     }
-    
-//     @Override
-//     public Optional<BranchProfile> findByBranchCode(String branchCode) {
-//         return branchProfileRepository.findByBranchCode(branchCode);
-//     }
-// }   
 
+//     @Override
+//     public BranchProfile updateBranch(Long id, BranchProfile branch) {
+
+//         BranchProfile existing = getBranch(id);
+
+//         existing.setBranchName(branch.getBranchName());
+//         existing.setContactEmail(branch.getContactEmail());
+//         existing.setActive(branch.getActive());
+
+//         return branchRepo.save(existing);
+//     }
+// }
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.BranchProfile;
